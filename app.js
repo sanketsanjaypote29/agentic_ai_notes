@@ -254,7 +254,23 @@ function injectResponsiveStylesIntoIframe() {
             el.style.setProperty('background', 'transparent', 'important');
         });
 
-        // 4. Ensure viewport meta tag exists for mobile devices
+        // 4. Hide redundant second sidebars embedded within individual notes (e.g., 008 Revision Notes)
+        doc.querySelectorAll('nav.sidebar, .page-wrap > .sidebar, .sidebar:not(#sidebar)').forEach(el => {
+            el.style.setProperty('display', 'none', 'important');
+        });
+        const pageWrap = doc.querySelector('.page-wrap');
+        if (pageWrap) {
+            pageWrap.style.setProperty('display', 'block', 'important');
+            pageWrap.style.setProperty('width', '100%', 'important');
+        }
+        const mainEl = doc.querySelector('.main');
+        if (mainEl) {
+            mainEl.style.setProperty('width', '100%', 'important');
+            mainEl.style.setProperty('max-width', '960px', 'important');
+            mainEl.style.setProperty('margin', '0 auto', 'important');
+        }
+
+        // 5. Ensure viewport meta tag exists for mobile devices
         if (!doc.querySelector('meta[name="viewport"]')) {
             const meta = doc.createElement('meta');
             meta.name = 'viewport';
@@ -262,7 +278,7 @@ function injectResponsiveStylesIntoIframe() {
             (doc.head || doc.body).appendChild(meta);
         }
 
-        // 5. Inject comprehensive responsive & scrollability stylesheet into iframe document
+        // 6. Inject comprehensive responsive & scrollability stylesheet into iframe document
         let style = doc.getElementById('responsive-note-overrides');
         if (!style) {
             style = doc.createElement('style');
@@ -288,6 +304,21 @@ function injectResponsiveStylesIntoIframe() {
             *, *::before, *::after {
                 box-sizing: border-box !important;
             }
+            /* Hide any embedded second sidebars in notes */
+            nav.sidebar, .sidebar:not(#sidebar), .page-wrap > .sidebar {
+                display: none !important;
+            }
+            .page-wrap {
+                display: block !important;
+                width: 100% !important;
+                min-height: auto !important;
+            }
+            .main {
+                width: 100% !important;
+                max-width: 960px !important;
+                margin: 0 auto !important;
+                box-sizing: border-box !important;
+            }
             div[class*="fixed"][class*="inset-0"],
             .fixed.inset-0,
             div[class*="z-[1000]"],
@@ -309,7 +340,7 @@ function injectResponsiveStylesIntoIframe() {
             button:has(svg):has(path[d*="m14 10 7-7"]) {
                 display: none !important;
             }
-            main, .main, .page, .page-inner,
+            main, .page, .page-inner,
             [class*="h-screen"], [class*="overflow-hidden"], [class*="min-h-0"],
             [class*="h-full"], [class*="h-[calc(100vh-85px)]"],
             div[class*="overflow-auto"],
