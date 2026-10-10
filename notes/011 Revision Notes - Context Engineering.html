@@ -1,0 +1,678 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style>
+@charset "utf-8";
+
+:root { --bg: #0f1117; --surface: #1a1d27; --surface2: #22263a; --border: #2e3250; --accent: #6c8fff; --accent2: #a78bfa; --accent3: #34d399; --accent4: #f59e0b; --accent5: #f87171; --text: #e2e8f0; --text-muted: #8892b0; --text-dim: #4a5578; --tag-bg: #1e2440; }
+
+* { box-sizing: border-box; margin: 0px; padding: 0px; }
+
+body { font-family: "Segoe UI", system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 2rem; max-width: 1100px; margin: 0px auto; }
+
+h1 { font-size: 2rem; font-weight: 700; color: var(--accent); margin-bottom: 0.25rem; }
+
+.subtitle { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 2.5rem; }
+
+h2 { font-size: 1.2rem; font-weight: 600; color: var(--text); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+
+h2 .icon { font-size: 1.1rem; }
+
+h3 { font-size: 1rem; font-weight: 600; color: var(--accent); margin-bottom: 0.5rem; }
+
+.section { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
+
+.section.highlight { border-top-color: ; border-right-color: ; border-bottom-color: ; border-left: 4px solid var(--accent); }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
+
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-top: 1rem; }
+
+.card { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 1.1rem; }
+
+.card h3 { color: var(--accent2); }
+
+.card.green h3 { color: var(--accent3); }
+
+.card.amber h3 { color: var(--accent4); }
+
+.card.red h3 { color: var(--accent5); }
+
+.card.blue h3 { color: var(--accent); }
+
+ul { padding-left: 1.2rem; color: var(--text-muted); font-size: 0.9rem; }
+
+ul li { margin-bottom: 0.35rem; }
+
+p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.5rem; }
+
+code { background: var(--tag-bg); color: var(--accent3); padding: 0.15rem 0.45rem; border-radius: 4px; font-size: 0.82rem; font-family: "JetBrains Mono", "Fira Code", monospace; }
+
+.formula { background: var(--tag-bg); border: 1px solid var(--border); border-radius: 6px; padding: 0.75rem 1rem; font-family: "JetBrains Mono", monospace; font-size: 0.85rem; color: var(--accent3); margin: 0.5rem 0px; overflow-x: auto; white-space: pre; }
+
+.tag { display: inline-block; background: var(--tag-bg); border: 1px solid var(--border); color: var(--accent2); border-radius: 20px; padding: 0.2rem 0.65rem; font-size: 0.75rem; margin: 0.2rem 0.1rem; }
+
+.tag.green { color: var(--accent3); }
+
+.tag.amber { color: var(--accent4); }
+
+.tag.red { color: var(--accent5); }
+
+.tag.blue { color: var(--accent); }
+
+.pipeline { display: flex; align-items: center; gap: 0px; margin: 1rem 0px; flex-wrap: wrap; }
+
+.pipeline-step { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 0.6rem 1rem; font-size: 0.85rem; color: var(--text); text-align: center; min-width: 110px; }
+
+.pipeline-arrow { color: var(--text-dim); font-size: 1.2rem; padding: 0px 0.3rem; }
+
+.comparison-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin-top: 1rem; }
+
+.comparison-table th { background: var(--surface2); color: var(--accent); padding: 0.65rem 1rem; text-align: left; border-bottom: 2px solid var(--border); }
+
+.comparison-table td { padding: 0.6rem 1rem; border-bottom: 1px solid var(--border); color: var(--text-muted); vertical-align: top; }
+
+.comparison-table tr:last-child td { border-bottom-width: medium; border-bottom-style: none; border-bottom-color: currentcolor; }
+
+.comparison-table tr:hover td { background: var(--surface2); }
+
+.dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 0.4rem; }
+
+.dot.blue { background: var(--accent); }
+
+.dot.purple { background: var(--accent2); }
+
+.dot.green { background: var(--accent3); }
+
+.dot.amber { background: var(--accent4); }
+
+.dot.red { background: var(--accent5); }
+
+.pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 0.75rem; }
+
+.pros, .cons { background: var(--tag-bg); border-radius: 6px; padding: 0.75rem; }
+
+.pros { border-left: 3px solid var(--accent3); }
+
+.cons { border-left: 3px solid var(--accent5); }
+
+.pros h4 { color: var(--accent3); font-size: 0.8rem; margin-bottom: 0.4rem; }
+
+.cons h4 { color: var(--accent5); font-size: 0.8rem; margin-bottom: 0.4rem; }
+
+.divider { border-right-width: medium; border-bottom-width: medium; border-left-width: medium; border-right-style: none; border-bottom-style: none; border-left-style: none; border-right-color: currentcolor; border-bottom-color: currentcolor; border-left-color: currentcolor; border-image: initial; border-top: 1px solid var(--border); margin: 1.5rem 0px; }
+
+.breadcrumb { color: var(--text-dim); font-size: 0.8rem; margin-bottom: 1.5rem; }
+
+.note-box { background: rgb(26, 36, 64); border: 1px solid rgb(42, 58, 106); border-radius: 6px; padding: 0.75rem 1rem; font-size: 0.85rem; color: rgb(144, 170, 212); margin-top: 0.75rem; }
+
+.zone-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.1rem; margin-bottom: 0.6rem; }
+
+.zone-card .zone-label { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.3rem; }
+
+.zone-card .zone-desc { font-size: 0.88rem; color: var(--text-muted); line-height: 1.55; }
+
+.zone-card .zone-tokens { font-size: 0.78rem; margin-top: 0.4rem; font-family: "JetBrains Mono", monospace; }
+
+.zone-sys .zone-label, .zone-sys .zone-tokens { color: var(--accent2); }
+
+.zone-conv .zone-label, .zone-conv .zone-tokens { color: var(--accent3); }
+
+.zone-rag .zone-label, .zone-rag .zone-tokens { color: var(--accent); }
+
+.zone-tool .zone-label, .zone-tool .zone-tokens { color: var(--accent4); }
+
+.zone-query .zone-label, .zone-query .zone-tokens { color: var(--accent5); }
+
+.pipe-block { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem 1.5rem; margin-bottom: 1rem; display: flex; gap: 1.2rem; align-items: flex-start; }
+
+.pipe-num { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 700; flex-shrink: 0; margin-top: 2px; }
+
+.pipe-body { flex: 1 1 0%; min-width: 0px; }
+
+.pipe-title { font-size: 1rem; font-weight: 600; margin-bottom: 0.15rem; }
+
+.pipe-subtitle { font-size: 0.82rem; color: var(--text-dim); margin-bottom: 0.75rem; }
+
+.problem-box { background: var(--tag-bg); border: 1px solid var(--border); border-radius: 6px; padding: 0.6rem 0.9rem; font-family: "JetBrains Mono", monospace; font-size: 0.8rem; color: var(--text-muted); line-height: 1.8; margin-bottom: 0.75rem; }
+
+.pipe-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 0.75rem; }
+
+.order-row { display: flex; align-items: flex-start; gap: 0.9rem; padding: 0.6rem 0px; border-bottom: 1px solid var(--border); }
+
+.order-row:last-child { border-bottom-width: medium; border-bottom-style: none; border-bottom-color: currentcolor; }
+
+.order-num { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; flex-shrink: 0; }
+
+.order-name { font-size: 0.9rem; font-weight: 600; color: var(--text); }
+
+.order-note { font-size: 0.78rem; color: var(--text-dim); margin-top: 2px; }
+
+@media (max-width: 700px) {
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .pros-cons { grid-template-columns: 1fr; }
+  .pipe-block { flex-direction: column; }
+}
+
+</style>
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Context Engineering Notes</title>
+  
+
+<style>
+/* Reset & iframe compatibility */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto !important;
+}
+</style>
+
+</head>
+<body>
+  <h1>Context Engineering</h1>
+  <p class="subtitle">How language models use context, how position shapes attention, and how to engineer the context window for maximum accuracy.</p>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 1. What is the Context Window? -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="section highlight">
+    <h2><span class="icon">📌</span> What is the Context Window?</h2>
+    <p>
+      Every time an LLM processes a request, it reads a finite block of text - the context window.
+      Everything the model "knows" during that call comes from exactly two sources:
+      its <strong>pre-training weights</strong> (frozen, general knowledge) and the
+      <strong>context window</strong> (dynamic, call-specific information you supply).
+    </p>
+    <p>
+      As an AI engineer, you have no control over the weights. The context window is your <em>entire design surface</em>.
+    </p>
+    <p>   
+      The context window is the maximum number of tokens an LLM can read in a single forward pass.
+      Tokens include <em>everything</em>: system prompt, conversation history, retrieved documents,
+      tool call results, and the model's own generated response.
+    </p>
+
+    <p style="margin-top:0.5rem">
+      ⚠ <strong>Tokens in the output count too</strong> - every token the model generates reduces
+      the space available for input on the next turn. A long response shrinks your remaining context budget.
+    </p>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 2. Four Zones -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="section">
+    <h2><span class="icon">🗂</span> The Four Zones of a Context Window</h2>
+    <p>
+      Think of the context window as a structured document with four distinct zones. Each serves a different purpose
+      and has different management strategies. Example: gpt-4o at 128,000 tokens, assembled per-call by your agent.
+    </p>
+
+    <div style="margin-top:1rem">
+      <div class="zone-card zone-sys">
+        <div class="zone-label">🔧 System Prompt</div>
+        <div class="zone-desc">Role definition, agent persona, rules, tool descriptions, output format instructions. Static or semi-static - set once per agent type.</div>
+        <div class="zone-tokens">~500–2k tokens</div>
+      </div>
+      <div class="zone-card zone-conv">
+        <div class="zone-label">💬 Conversation History</div>
+        <div class="zone-desc">All prior turns (user messages + assistant responses) in this session. Grows with each turn - must be managed or it overflows.</div>
+        <div class="zone-tokens">~1k–20k tokens</div>
+      </div>
+      <div class="zone-card zone-rag">
+        <div class="zone-label">📚 Retrieved Context</div>
+        <div class="zone-desc">Chunks fetched by the RAG pipeline - documents, code, knowledge base content relevant to this specific query. Dynamic per query.</div>
+        <div class="zone-tokens">~2k–10k tokens</div>
+      </div>
+      <div class="zone-card zone-tool">
+        <div class="zone-label">🛠 Tool Outputs</div>
+        <div class="zone-desc">Results from function/tool calls the agent made - API responses, code execution outputs, search results, database query results.</div>
+        <div class="zone-tokens">~500–5k tokens</div>
+      </div>
+      <div class="zone-card zone-query">
+        <div class="zone-label">👤 Current User Query</div>
+        <div class="zone-desc">The current user message. Placed last - leverages the recency effect for maximum attention during generation.</div>
+        <div class="zone-tokens">~50–500 tokens</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 3. Lost in the Middle -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="section">
+    <h2><span class="icon">⚠️</span> Lost in the Middle Problem</h2>
+    <p>
+      LLMs exhibit a <strong>"lost in the middle"</strong> behavior - information at the beginning and end of a long
+      context is utilized more effectively than information buried in the middle. Retrieval accuracy follows a
+      <strong>U-shaped curve</strong>.
+    </p>
+
+    <div class="formula">Accuracy
+
+High  ──╮      ╭──
+         ╲    ╱
+          ╲  ╱
+Low        ╰╯
+      Start   Middle   End</div>
+
+    <p style="margin-top:0.75rem">
+      Reference: <em>"Lost in the Middle: How Language Models Use Long Contexts"</em> (Liu et al.) - models performed
+      best when relevant information appeared near the start or end, and worst when it appeared in the middle.
+    </p>
+
+    <hr class="divider">
+
+    <h3>1. Recency Effect (End of Context)</h3>
+    <p>
+      The end of the context is given higher importance because of how transformer-based generation works.
+      When generating the next token, the model attends to all previous tokens, but the most recent tokens
+      are closer to the current generation step and easier to utilize. This effect is driven by
+      <strong>transformer architecture and generation dynamics</strong>.
+    </p>
+    <div class="formula">[ Long Context ]
+[ Long Context ]
+[ Long Context ]
+
+User Question    ← appears at the end → highly influential</div>
+
+    <hr class="divider">
+
+    <h3>2. Primacy Effect (Beginning of Context)</h3>
+    <p>
+      The beginning-of-context advantage is <strong>not</strong> built into the transformer architecture - it
+      emerges from training. During pretraining, documents frequently start with titles, headings, introductions,
+      and summaries. During instruction tuning, prompts often begin with:
+    </p>
+    <div class="formula">You are a helpful assistant.
+Follow these rules...</div>
+    <p>
+      As a result, the model learns that early tokens often contain critical information.
+      This effect is primarily a <strong>learned behavior</strong> rather than an architectural property.
+    </p>
+
+    <hr class="divider">
+
+    <h3>3. Why is the Middle Weaker?</h3>
+    <p>As context length increases:</p>
+    <ul>
+      <li>Attention must be distributed across more tokens</li>
+      <li>Relevant information competes with irrelevant information</li>
+      <li>Retrieval of information from the middle becomes less reliable</li>
+    </ul>
+    <p style="margin-top:0.5rem">
+      The information is not forgotten, but the probability of successfully utilizing it decreases
+      compared to information near the beginning or end.
+    </p>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 4. Context Architecture Patterns -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="section highlight">
+    <h2><span class="icon">🏗</span> Context Architecture Patterns</h2>
+    <p>
+      This is one of the most interesting parts of context engineering. When people say <strong>"Context Architecture"</strong>,
+      they're asking: <em>How is the final prompt/context assembled before every LLM call?</em>
+      Production systems usually have these patterns.
+    </p>
+
+    <p>
+      Static → Conversational → Knowledge-Augmented → Agentic.
+    </p>
+
+    <table class="comparison-table" style="margin-top:1.25rem">
+      <thead>
+        <tr>
+          <th>Pattern</th>
+          <th>Context assembled from</th>
+          <th>Use case</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="color:var(--text)">Static</td>
+          <td>System prompt + query</td>
+          <td>Simple chatbot, Q&amp;A bot</td>
+        </tr>
+        <tr>
+          <td style="color:var(--text)">Conversational</td>
+          <td>System prompt + history + query</td>
+          <td>ChatGPT-style, customer support</td>
+        </tr>
+        <tr>
+          <td style="color:var(--text)">RAG-Based</td>
+          <td>System prompt + retrieved chunks + query</td>
+          <td>Enterprise search, doc assistant</td>
+        </tr>
+        <tr>
+          <td style="color:var(--text)">Memory-Augmented</td>
+          <td>System prompt + long-term memory + history + query</td>
+          <td>Personal assistant, copilot</td>
+        </tr>
+        <tr>
+          <td style="color:var(--text)">Tool-Augmented</td>
+          <td>System prompt + tool results + query</td>
+          <td>Function calling, agentic tasks</td>
+        </tr>
+        <tr>
+          <td style="color:var(--text)">Hybrid</td>
+          <td>Memory + RAG + tools + history + query</td>
+          <td>Modern AI assistants, enterprise copilots</td>
+        </tr>
+        <tr>
+          <td style="color:var(--text)">Hierarchical</td>
+          <td>Tree of summaries → right granularity per query</td>
+          <td>Long-document QA (RAPTOR)</td>
+        </tr>
+        <tr>
+          <td style="color:var(--text)">Layered</td>
+          <td>Explicit layers with priority + token budget per layer</td>
+          <td>LangChain, agent frameworks</td>
+        </tr>
+        <tr>
+          <td style="color:var(--text)">Agent State</td>
+          <td>State object → Context Builder → prompt</td>
+          <td>LangGraph, OpenAI Agents SDK, ADK</td>
+        </tr>
+        <tr>
+          <td style="color:var(--text)">Dynamic Assembly</td>
+          <td>Query-time decisions on memory / retrieval / tools → fresh context</td>
+          <td>Sophisticated enterprise agents</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 5. Memory - Why Needed -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="section highlight">
+    <h2><span class="icon">🧠</span> Memory in AI Agents - Why Is It Needed?</h2>
+    <p>
+      Every LLM call starts from a blank slate. The model has no inherent awareness of who the user is,
+      what happened in previous sessions, or what it did an hour ago. Without memory, every conversation
+      is stateless - the agent cannot learn, personalize, or reason across time.
+    </p>
+
+    <div class="grid-3" style="margin-top:1rem">
+      <div class="card blue">
+        <h3>Multi-session continuity</h3>
+        <p>Users expect the assistant to remember past conversations, preferences, and decisions - not repeat the same onboarding questions every time.</p>
+      </div>
+      <div class="card green">
+        <h3>Personalization</h3>
+        <p>Facts about the user (role, preferences, history) make responses more relevant and reduce cognitive load - the agent doesn't ask what it already knows.</p>
+      </div>
+      <div class="card amber">
+        <h3>Long-running agents</h3>
+        <p>Agentic tasks spanning hours or days cannot fit their full history in one context window. Memory lets the agent pick up where it left off.</p>
+      </div>
+      <div class="card">
+        <h3>Context window is finite</h3>
+        <p>Even 128k tokens run out. Memory externalizes information so the context window holds only what's needed <em>right now</em>.</p>
+      </div>
+      <div class="card red">
+        <h3>Avoiding repetition</h3>
+        <p>Without memory, the agent rediscovers the same facts, re-asks the same questions, and makes the same errors across sessions.</p>
+      </div>
+      <div class="card amber">
+        <h3>Cross-session reasoning</h3>
+        <p>Some conclusions require synthesizing information from many past interactions - impossible without a store that persists beyond a single context window.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 6. Short-Term Memory -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="section">
+    <h2><span class="icon">⚡</span> Short-Term Memory (Session Memory)</h2>
+    <p>
+      Session-scoped memory covering recent interactions.
+    </p>
+    <div class="grid-2" style="margin-top:0.75rem">
+      <div class="card blue">
+        <h3>What it holds</h3>
+        <ul>
+          <li>Conversation turns (user + assistant)</li>
+          <li>Tool call results from this session</li>
+          <li>Current task state and partial results</li>
+          <li>Intermediate reasoning / chain-of-thought</li>
+        </ul>
+      </div>
+      <div class="card green">
+        <h3>Overflow management</h3>
+        <ul>
+          <li><strong>Sliding window</strong> — keep last N turns</li>
+          <li><strong>Rolling summarization</strong> — compress old turns</li>
+          <li><strong>Write-to-long-term</strong> — extract key facts before eviction</li>
+        </ul>
+      </div>
+    </div>
+    <div class="note-box" style="margin-top:0.75rem">
+      Short-term memory can be persisted indefinitely — many frameworks keep it in a DB. "Session-scoped" refers to <em>usage scope</em>, not storage lifetime.
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 7. Long-Term Memory -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="section">
+    <h2><span class="icon">🗄</span> Long-Term Memory (External Memory)</h2>
+    <p>
+      Persists across sessions in an external store. Selectively retrieved into the context window when relevant.
+      Scales beyond any token limit — trades perfect recall for scalability.
+    </p>
+    <div class="grid-3" style="margin-top:0.75rem">
+      <div class="card blue">
+        <h3>Episodic</h3>
+        <p>Records of past events — what happened, when, with whom.</p>
+        <span class="tag blue">Event-based</span>
+      </div>
+      <div class="card green">
+        <h3>Semantic</h3>
+        <p>Facts and user-specific knowledge independent of when learned.</p>
+        <span class="tag green">Fact-based</span>
+      </div>
+      <div class="card amber">
+        <h3>Procedural</h3>
+        <p>Skills, workflows, and behavioral rules to follow consistently.</p>
+        <span class="tag amber">Behavior-based</span>
+      </div>
+    </div>
+    <div class="note-box" style="margin-top:0.75rem">
+      <strong>Four operations:</strong> Write (store at session end or on trigger) → Read (retrieve top-K at query time) → Update (overwrite stale facts) → Delete (hygiene, deduplication, user-triggered forget).
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- Context Management Pipeline -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="section highlight">
+    <h2><span class="icon">🔀</span> The Context Management Pipeline</h2>
+    <p>
+      Now that we understand what goes into context and how different architectures assemble it,
+      the question is: <em>how do we engineer the contents of each zone to be as useful as possible?</em>
+      Effective context engineering is a pipeline - each stage transforms the raw information pool into a
+      focused, well-ordered context that maximizes model performance.
+    </p>
+
+    <div class="pipeline" style="flex-wrap:wrap; gap:0.5rem; margin-top:1rem">
+      <div class="pipeline-step" style="border-color:var(--accent2)">Expansion</div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step" style="border-color:var(--accent)">Selection</div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step" style="border-color:var(--accent3)">Compression</div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step" style="border-color:var(--accent5)">Pruning</div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step" style="border-color:var(--accent4)">Ordering</div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step" style="border-color:var(--accent3)">LLM Generation</div>
+    </div>
+  </div>
+
+  <!-- Step 1: Expansion -->
+  <div class="pipe-block">
+    <div class="pipe-num" style="background:#2a2060;color:var(--accent2);">1</div>
+    <div class="pipe-body">
+      <div class="pipe-title" style="color:var(--accent2)">Context Expansion</div>
+      <div class="pipe-subtitle">How do we get more potentially useful information?</div>
+      <div class="problem-box">User asks question
+↓ Not enough context
+↓ Expand search space</div>
+      <div class="pipe-tags">
+        <span class="tag">Query Expansion</span>
+        <span class="tag">Multi-Query Retrieval</span>
+        <span class="tag">HyDE</span>
+        <span class="tag">Graph Expansion</span>
+        <span class="tag">Multi-Hop Retrieval</span>
+      </div>
+      <ul>
+        <li><strong>Query expansion</strong> - rewrite the user's query into multiple alternative phrasings</li>
+        <li><strong>Multi-query retrieval</strong> - run several queries in parallel, merge and deduplicate results</li>
+        <li><strong>HyDE</strong> - generate a hypothetical answer with the LLM, use it as the retrieval query to bridge the query-doc gap</li>
+        <li><strong>Graph expansion</strong> - follow entity links in a knowledge graph starting from initial results</li>
+        <li><strong>Multi-hop retrieval</strong> - iteratively retrieve; each step is informed by the previous results</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Step 2: Selection -->
+  <div class="pipe-block">
+    <div class="pipe-num" style="background:#1a2440;color:var(--accent);">2</div>
+    <div class="pipe-body">
+      <div class="pipe-title" style="color:var(--accent)">Context Selection</div>
+      <div class="pipe-subtitle">Now we have too much information. What do we keep?</div>
+      <div class="problem-box">100 candidate chunks
+↓ Need 10</div>
+      <div class="pipe-tags">
+        <span class="tag blue">Top-K Retrieval</span>
+        <span class="tag blue">Similarity Thresholds</span>
+        <span class="tag blue">Relevance Filtering</span>
+        <span class="tag blue">Memory Retrieval</span>
+      </div>
+      <ul>
+        <li><strong>Top-K retrieval</strong> - keep the K highest-scoring chunks by embedding similarity</li>
+        <li><strong>Similarity thresholds</strong> - discard any chunk below a minimum cosine score</li>
+        <li><strong>Relevance filtering</strong> - use a cross-encoder or LLM judge to rerank and filter candidates</li>
+        <li><strong>Memory retrieval</strong> - pull relevant long-term memories alongside document chunks</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Step 3: Compression -->
+  <div class="pipe-block">
+    <div class="pipe-num" style="background:#0d2e24;color:var(--accent3);">3</div>
+    <div class="pipe-body">
+      <div class="pipe-title" style="color:var(--accent3)">Context Compression</div>
+      <div class="pipe-subtitle">Still too large. How do we shrink it?</div>
+      <div class="problem-box">10 chunks · 20k tokens
+↓ Need 5k tokens</div>
+      <div class="pipe-tags">
+        <span class="tag green">Summarization</span>
+        <span class="tag green">Hierarchical Summaries</span>
+        <span class="tag green">Fact Extraction</span>
+        <span class="tag green">Context Distillation</span>
+      </div>
+      <ul>
+        <li><strong>Summarization</strong> - generate a concise summary of each chunk</li>
+        <li><strong>Hierarchical summaries</strong> - summarize at multiple levels: sentence → paragraph → document</li>
+        <li><strong>Fact extraction</strong> - extract only the key claims or assertions from each chunk</li>
+        <li><strong>Context distillation</strong> - use a smaller model to condense context before passing to the main model</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Step 4: Pruning -->
+  <div class="pipe-block">
+    <div class="pipe-num" style="background:#2e1a1a;color:var(--accent5);">4</div>
+    <div class="pipe-body">
+      <div class="pipe-title" style="color:var(--accent5)">Context Pruning</div>
+      <div class="pipe-subtitle">What should be removed completely?</div>
+      <div class="problem-box">Some context adds zero value
+↓ Remove it</div>
+      <div class="pipe-tags">
+        <span class="tag red">Duplicate Chunks</span>
+        <span class="tag red">Irrelevant Memories</span>
+        <span class="tag red">Stale Context</span>
+        <span class="tag red">Old Tool Outputs</span>
+      </div>
+      <ul>
+        <li><strong>Duplicate chunks</strong> - deduplicate semantically identical or near-identical passages</li>
+        <li><strong>Irrelevant memories</strong> - drop recalled memories that don't apply to the current query</li>
+        <li><strong>Stale context</strong> - remove outdated information: old dates, superseded facts</li>
+        <li><strong>Old tool outputs</strong> - trim tool results from early turns that no longer inform the current task</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Step 5: Ordering -->
+  <div class="pipe-block">
+    <div class="pipe-num" style="background:#2a2010;color:var(--accent4);">5</div>
+    <div class="pipe-body">
+      <div class="pipe-title" style="color:var(--accent4)">Context Ordering</div>
+      <div class="pipe-subtitle">Now that we know what stays, where should it go?</div>
+      <div class="problem-box">Same chunks · Different ordering
+↓ Different answer quality</div>
+      <div class="pipe-tags">
+        <span class="tag amber">Lost in the Middle</span>
+        <span class="tag amber">Primacy Effect</span>
+        <span class="tag amber">Recency Effect</span>
+        <span class="tag amber">Chunk Ordering</span>
+      </div>
+      <p>The same set of chunks can produce very different answers depending purely on their position.
+      Ordering is free signal - use it deliberately.</p>
+
+      <div style="margin-top:0.9rem">
+        <div class="order-row">
+          <div class="order-num" style="background:#2a2060;color:var(--accent2);">1</div>
+          <div>
+            <div class="order-name">System Prompt</div>
+            <div class="order-note" style="color:var(--accent2);">← primacy effect: model attends highly to role, rules, and persona at the start</div>
+          </div>
+        </div>
+        <div class="order-row">
+          <div class="order-num" style="background:#0d2e24;color:var(--accent3);">2</div>
+          <div>
+            <div class="order-name">User Memory</div>
+            <div class="order-note">Persistent facts about the user, preferences, prior context</div>
+          </div>
+        </div>
+        <div class="order-row">
+          <div class="order-num" style="background:#1a2440;color:var(--accent);">3</div>
+          <div>
+            <div class="order-name">Retrieved Context</div>
+            <div class="order-note">Most relevant chunks first within this block</div>
+          </div>
+        </div>
+        <div class="order-row">
+          <div class="order-num" style="background:#2a2010;color:var(--accent4);">4</div>
+          <div>
+            <div class="order-name">Tool Results</div>
+            <div class="order-note">Function outputs, API responses, search results</div>
+          </div>
+        </div>
+        <div class="order-row">
+          <div class="order-num" style="background:#2e1a1a;color:var(--accent5);">5</div>
+          <div>
+            <div class="order-name">Current User Query</div>
+            <div class="order-note" style="color:var(--accent5);">← recency effect: placed last, this is highly influential during generation</div>
+          </div>
+        </div>
+      </div>
+
+      <p style="margin-top:0.9rem;font-size:0.82rem;color:var(--text-dim)">This is the recommended default ordering - not a hard rule. Frameworks may vary (e.g. tool results before retrieval), but the key invariants are: system prompt first, current query last.</p>
+
+      <div class="note-box" style="margin-top:0.75rem">
+        This arrangement leverages both the <strong>primacy effect</strong> (beginning) and
+        <strong>recency effect</strong> (end) - the two positions where model attention is consistently highest.
+      </div>
+    </div>
+  </div>
+
+
+</body></html>

@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Revision Notes — RAG Evaluation Metrics</title>
+  <style>
+    @charset "utf-8";
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #22263a;
+      --border: #2e3450;
+      --accent: #6c8cff;
+      --accent2: #a78bfa;
+      --accent3: #34d399;
+      --accent4: #f59e0b;
+      --accent5: #f87171;
+      --text: #e2e8f0;
+      --text-muted: #8892b0;
+      --code-bg: #131722;
+      --tag-blue: #1e3a5f;
+      --tag-purple: #2d1f4a;
+      --tag-green: #1a3d2e;
+      --tag-yellow: #3d2c10;
+      --tag-red: #3d1a1a;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+      padding: 40px 24px;
+      overflow-x: hidden;
+      overflow-y: auto !important;
+    }
+
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .badge {
+      display: inline-block;
+      background: var(--tag-blue);
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      border-radius: 20px;
+      padding: 4px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-size: 38px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #ffffff, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 12px;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 16px;
+      max-width: 750px;
+      margin: 0 auto;
+    }
+
+    .toc {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px 28px;
+      margin-bottom: 44px;
+    }
+
+    .toc h3 {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+
+    .toc ol {
+      list-style: none;
+      counter-reset: toc;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 24px;
+    }
+
+    .toc li { counter-increment: toc; }
+
+    .toc a {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: color 0.2s;
+    }
+
+    .toc a::before {
+      content: counter(toc, decimal-leading-zero);
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .toc a:hover { color: var(--accent2); }
+
+    .section {
+      margin-bottom: 56px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .section-num {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--tag-blue);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      font-weight: 800;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    h2 {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--accent2);
+      margin: 24px 0 12px;
+    }
+
+    p { margin-bottom: 14px; }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .card-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+
+    pre, code {
+      font-family: "JetBrains Mono", "Cascadia Code", "Fira Code", monospace;
+      font-size: 13px;
+    }
+
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 20px;
+      overflow-x: auto;
+      margin: 14px 0;
+      color: #c9d1d9;
+      line-height: 1.7;
+    }
+
+    code {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2px 6px;
+      color: var(--accent3);
+      font-size: 12px;
+    }
+
+    .key-insight {
+      background: linear-gradient(135deg, rgba(108, 140, 255, 0.08), rgba(52, 211, 153, 0.06));
+      border: 1px solid rgba(108, 140, 255, 0.25);
+      border-radius: 12px;
+      padding: 22px 24px;
+      margin: 24px 0;
+    }
+
+    .key-insight h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .key-insight p:last-child { margin-bottom: 0; }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .metric-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .metric-card.blue { border-top: 3px solid var(--accent); }
+    .metric-card.purple { border-top: 3px solid var(--accent2); }
+    .metric-card.green { border-top: 3px solid var(--accent3); }
+    .metric-card.yellow { border-top: 3px solid var(--accent4); }
+    .metric-card.red { border-top: 3px solid var(--accent5); }
+
+    .metric-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .metric-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .metric-tag {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 12px;
+      text-transform: uppercase;
+    }
+
+    .metric-formula {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 12px;
+      margin: 10px 0;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 12px;
+      color: var(--accent3);
+      text-align: center;
+    }
+
+    .metric-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      flex-grow: 1;
+    }
+
+    .flow-diagram {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 20px 0;
+    }
+
+    .triad-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin: 20px 0;
+    }
+
+    .triad-node {
+      background: var(--code-bg);
+      border: 2px solid var(--accent);
+      border-radius: 10px;
+      padding: 14px 20px;
+      text-align: center;
+      min-width: 150px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .triad-node.query { border-color: var(--accent4); }
+    .triad-node.context { border-color: var(--accent); }
+    .triad-node.answer { border-color: var(--accent3); }
+
+    .triad-edge {
+      background: var(--surface);
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .triad-edge span {
+      display: block;
+      font-weight: 700;
+      color: var(--accent2);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 14px;
+    }
+
+    th {
+      background: var(--surface2);
+      color: var(--text-muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    tr:hover td { background: var(--surface2); }
+
+    .pill {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .pill-yes { background: var(--tag-green); color: var(--accent3); }
+    .pill-no { background: var(--tag-red); color: var(--accent5); }
+    .pill-opt { background: var(--tag-yellow); color: var(--accent4); }
+
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .compare-box {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px;
+    }
+
+    .compare-box h4 {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .compare-box ul {
+      list-style: none;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .compare-box ul li {
+      padding: 4px 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .compare-box ul li::before {
+      content: "•";
+      color: var(--accent);
+      font-size: 16px;
+      line-height: 1;
+    }
+
+    .highlight-example {
+      background: #171c2b;
+      border-left: 4px solid var(--accent);
+      padding: 16px 20px;
+      margin: 16px 0;
+      border-radius: 0 8px 8px 0;
+      font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+      .toc ol { grid-template-columns: 1fr; }
+      .compare-grid { grid-template-columns: 1fr; }
+      .triad-container { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div class="badge">Agentic AI System Design · Day 3 Revision Notes</div>
+    <h1>RAG Evaluation Metrics</h1>
+    <p class="subtitle">Complete technical reference for evaluating Retrieval-Augmented Generation systems: offline golden sets, retrieval quality metrics, generation fidelity, LLM-as-a-Judge, and the Ragas evaluation framework.</p>
+  </div>
+
+  <!-- Table of Contents -->
+  <div class="toc">
+    <h3>Table of Contents</h3>
+    <ol>
+      <li><a href="#edd">From TDD to EDD (Eval-Driven Development)</a></li>
+      <li><a href="#golden-dataset">Building the Golden Dataset</a></li>
+      <li><a href="#taxonomy">RAG Evaluation Architecture &amp; Layers</a></li>
+      <li><a href="#retrieval-metrics">Component 1: Retrieval Metrics (Precision, Recall, MRR, NDCG)</a></li>
+      <li><a href="#tradeoff">The Precision vs Recall Trade-off</a></li>
+      <li><a href="#rag-triad">Component 2: Generation Metrics &amp; The RAG Triad</a></li>
+      <li><a href="#faithfulness-vs-correctness">Critical Distinction: Correctness vs. Faithfulness</a></li>
+      <li><a href="#matrix">Evaluation Matrix (What to Measure at Each Layer)</a></li>
+      <li><a href="#ragas-code">Implementation: Ragas with GPT-4o Evaluator</a></li>
+      <li><a href="#production">Production Loop &amp; Continuous Improvement</a></li>
+    </ol>
+  </div>
+
+  <!-- Section 1 -->
+  <div class="section" id="edd">
+    <div class="section-header">
+      <div class="section-num">01</div>
+      <h2>From TDD to EDD (Eval-Driven Development)</h2>
+    </div>
+    <div class="card">
+      <p>
+        In traditional software engineering, <strong>Test-Driven Development (TDD)</strong> uses unit and integration tests with deterministic assertions (<code>assert actual == expected</code>). But in Generative AI and RAG applications, the system outputs non-deterministic natural language. Asserting exact string equality is impossible.
+      </p>
+      <p>
+        Instead, modern AI engineering adopts <strong>Eval-Driven Development (EDD)</strong>. Before tuning chunk sizes, embedding models, vector databases, or prompt instructions, you build a benchmark dataset and define quantitative metrics. Any modification to your pipeline must demonstrably improve or maintain these eval scores.
+      </p>
+      <div class="key-insight">
+        <h4>Core Engineering Principle</h4>
+        <p>
+          "You cannot optimize what you do not measure." Without a repeatable evaluation harness, tweaking RAG parameters (top_k, chunk overlap, prompt engineering) is pure guesswork. EDD turns subjective prompt tweaking into verifiable, regression-tested engineering.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 2 -->
+  <div class="section" id="golden-dataset">
+    <div class="section-header">
+      <div class="section-num">02</div>
+      <h2>Building the Golden Dataset</h2>
+    </div>
+    <div class="card">
+      <p>
+        A <strong>Golden Dataset</strong> is the ground-truth benchmark suite for your RAG system. It represents the questions real users ask and the verified answers they expect.
+      </p>
+      <div class="card-title">Golden Dataset Schema</div>
+      <pre><code>{
+  "question": "What happens if a user provides an incorrect password during login?",
+  "reference": "AuthService.login in auth.py compares the submitted password against the stored plaintext password in _passwords dict. If they do not match, it raises AuthError('Invalid password').",
+  "ground_truth_contexts": [
+    "auth.py: AuthService.login(...) -> raises AuthError('Invalid password')"
+  ]
+}</code></pre>
+
+      <h3>Query Types to Include in Your Golden Set</h3>
+      <div class="metric-grid">
+        <div class="metric-card blue">
+          <div class="metric-name">Factoid Queries</div>
+          <p class="metric-desc">Specific, single-hop lookups (e.g., <em>"Where is _user_plans defined?"</em>). Tests precision of direct semantic retrieval.</p>
+        </div>
+        <div class="metric-card purple">
+          <div class="metric-name">Comparison Queries</div>
+          <p class="metric-desc">Comparing two concepts, classes, or endpoints (e.g., <em>"Compare semantic search vs BM25 in our codebase"</em>). Tests multi-chunk retrieval.</p>
+        </div>
+        <div class="metric-card green">
+          <div class="metric-name">Procedure Queries</div>
+          <p class="metric-desc">Step-by-step instructions (e.g., <em>"How does task limit enforcement work in BillingService?"</em>). Tests sequence preservation.</p>
+        </div>
+        <div class="metric-card yellow">
+          <div class="metric-name">Summarization Queries</div>
+          <p class="metric-desc">Broad, thematic overviews across entire modules. Tests high-level abstraction without lost context.</p>
+        </div>
+        <div class="metric-card red">
+          <div class="metric-name">Adversarial / Negative Queries</div>
+          <p class="metric-desc">Questions whose answers do NOT exist in the knowledge base. Tests the system's ability to refrain from hallucinating.</p>
+        </div>
+      </div>
+
+      <h3>Methods of Dataset Creation</h3>
+      <div class="compare-grid">
+        <div class="compare-box">
+          <h4>1. Synthetic Generation (LLM-Assisted)</h4>
+          <ul>
+            <li>Run an LLM over your ingested chunks to generate question-answer pairs automatically.</li>
+            <li>Fast and cheap; easily generates 100+ samples.</li>
+            <li>Risk: Can produce artificial, uniform queries that don't reflect true human usage.</li>
+          </ul>
+        </div>
+        <div class="compare-box">
+          <h4>2. Production Logs &amp; Expert Curation</h4>
+          <ul>
+            <li>Collect real user queries from production monitoring (Langfuse, OpenLIT).</li>
+            <li>Flag queries with low user feedback (thumbs down) or failed tool calls.</li>
+            <li>Subject-matter experts write verified reference answers.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 3 -->
+  <div class="section" id="taxonomy">
+    <div class="section-header">
+      <div class="section-num">03</div>
+      <h2>RAG Evaluation Architecture &amp; Layers</h2>
+    </div>
+    <div class="card">
+      <p>
+        A production RAG pipeline consists of multiple distinct stages. Evaluating only the end output makes diagnosis impossible. When an answer is wrong, is it because the retriever fetched irrelevant text, or because the LLM ignored the retrieved facts?
+      </p>
+
+      <div class="flow-diagram">
+        <div class="card-title">Decoupled Evaluation Architecture</div>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div style="background: var(--code-bg); padding: 12px 18px; border-radius: 8px; border-left: 4px solid var(--accent);">
+            <strong>1. Ingestion &amp; Chunking Layer:</strong> Document parsing, AST chunking, semantic splitters.
+          </div>
+          <div style="text-align: center; color: var(--text-muted);">↓</div>
+          <div style="background: var(--code-bg); padding: 12px 18px; border-radius: 8px; border-left: 4px solid var(--accent2);">
+            <strong>2. Retrieval &amp; Ranking Layer:</strong> Vector search (Chroma, FAISS), BM25, Cross-Encoder Re-ranker.
+            <div style="font-size: 12px; color: var(--accent3); margin-top: 4px;">Evaluated via: Precision@K, Recall@K, Hit Rate, MRR, NDCG (Deterministic, no LLM needed)</div>
+          </div>
+          <div style="text-align: center; color: var(--text-muted);">↓</div>
+          <div style="background: var(--code-bg); padding: 12px 18px; border-radius: 8px; border-left: 4px solid var(--accent4);">
+            <strong>3. Generation &amp; Synthesis Layer:</strong> Prompt template, Context injection, LLM generation.
+            <div style="font-size: 12px; color: var(--accent4); margin-top: 4px;">Evaluated via: Faithfulness, Answer Relevance, Factual Correctness (LLM-as-a-Judge)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 4 -->
+  <div class="section" id="retrieval-metrics">
+    <div class="section-header">
+      <div class="section-num">04</div>
+      <h2>Component 1: Retrieval Metrics (IR Metrics)</h2>
+    </div>
+    <div class="card">
+      <p>
+        Retrieval metrics measure how effectively the search engine or vector database identifies relevant chunks from the corpus without needing any LLM call.
+      </p>
+
+      <div class="metric-grid">
+        <!-- Precision -->
+        <div class="metric-card blue">
+          <div class="metric-header">
+            <span class="metric-name">Precision@K</span>
+            <span class="metric-tag pill-opt">Accuracy</span>
+          </div>
+          <div class="metric-formula">Precision@K = |Relevant Retrieved| / K</div>
+          <p class="metric-desc">
+            Measures the proportion of retrieved chunks that are actually relevant. It answers: <em>"How much noise and garbage did we inject into the prompt?"</em>
+          </p>
+        </div>
+
+        <!-- Recall -->
+        <div class="metric-card green">
+          <div class="metric-header">
+            <span class="metric-name">Recall@K</span>
+            <span class="metric-tag pill-yes">Completeness</span>
+          </div>
+          <div class="metric-formula">Recall@K = |Relevant Retrieved| / |Total Relevant|</div>
+          <p class="metric-desc">
+            Measures the fraction of all relevant chunks in the knowledge base that were captured. It answers: <em>"Did we miss any vital piece of evidence?"</em>
+          </p>
+        </div>
+
+        <!-- Hit Rate -->
+        <div class="metric-card yellow">
+          <div class="metric-header">
+            <span class="metric-name">Hit Rate@K</span>
+            <span class="metric-tag pill-yes">Binary</span>
+          </div>
+          <div class="metric-formula">Hit Rate = (Hit ≥ 1 ? 1 : 0) / N</div>
+          <p class="metric-desc">
+            The percentage of queries where <em>at least one</em> relevant document is present in the top-K retrieved list. A crucial baseline sanity check.
+          </p>
+        </div>
+
+        <!-- MRR -->
+        <div class="metric-card purple">
+          <div class="metric-header">
+            <span class="metric-name">Mean Reciprocal Rank (MRR)</span>
+            <span class="metric-tag pill-opt">First Hit Rank</span>
+          </div>
+          <div class="metric-formula">MRR = (1 / |Q|) · Σ (1 / rank_i)</div>
+          <p class="metric-desc">
+            Focuses strictly on the position of the <strong>first</strong> relevant document. If rank is 1 &rarr; score 1.0; if rank 2 &rarr; 0.5; if rank 3 &rarr; 0.333.
+          </p>
+        </div>
+
+        <!-- NDCG -->
+        <div class="metric-card red">
+          <div class="metric-header">
+            <span class="metric-name">NDCG@K</span>
+            <span class="metric-tag pill-opt">Graded Order</span>
+          </div>
+          <div class="metric-formula">NDCG@K = DCG@K / IDCG@K</div>
+          <p class="metric-desc">
+            Normalized Discounted Cumulative Gain handles <em>graded relevance</em> (e.g. 0=irrelevant, 1=partially relevant, 2=highly relevant) and applies a logarithmic position penalty.
+          </p>
+        </div>
+      </div>
+
+      <div class="highlight-example">
+        <strong>Concrete Numerical Example (From Educosys Class):</strong><br>
+        Suppose a repository has <strong>1,000 documents</strong> total, of which <strong>100 documents</strong> are relevant to "Agentic System Design".<br>
+        Your retriever fetches <strong>50 documents</strong> (K=50). Upon inspection, <strong>10 of those 50</strong> are truly relevant.<br>
+        • <strong>Precision:</strong> 10 / 50 = <strong>20% (0.20)</strong><br>
+        • <strong>Recall:</strong> 10 / 100 = <strong>10% (0.10)</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 5 -->
+  <div class="section" id="tradeoff">
+    <div class="section-header">
+      <div class="section-num">05</div>
+      <h2>The Precision vs Recall Trade-off</h2>
+    </div>
+    <div class="card">
+      <p>
+        In RAG systems, tuning Top-K creates a direct engineering tension between Precision and Recall:
+      </p>
+
+      <div class="compare-grid">
+        <div class="compare-box" style="border-top: 3px solid var(--accent5);">
+          <h4>Extreme 1: Huge Top-K (e.g., K = 1,000)</h4>
+          <ul>
+            <li><strong>Recall = 100/100 = 100%</strong> (All relevant chunks found).</li>
+            <li><strong>Precision = 100/1,000 = 10%</strong> (900 chunks of garbage noise).</li>
+            <li><strong>Consequences:</strong>
+              <br>• Skyrocketing token costs and latency.
+              <br>• "Lost in the Middle" syndrome — the LLM misses needles buried in haystacks.
+              <br>• High risk of context confusion and hallucination.
+            </li>
+          </ul>
+        </div>
+
+        <div class="compare-box" style="border-top: 3px solid var(--accent3);">
+          <h4>Extreme 2: Tiny Top-K (e.g., K = 1)</h4>
+          <ul>
+            <li><strong>Precision = 1/1 = 100%</strong> (Pure signal, zero noise).</li>
+            <li><strong>Recall = 1/100 = 1%</strong> (99% of relevant information omitted).</li>
+            <li><strong>Consequences:</strong>
+              <br>• The LLM lacks sufficient context for complex or multi-part questions.
+              <br>• Forces the model to guess or return incomplete answers.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="key-insight">
+        <h4>Optimal Engineering Balance</h4>
+        <p>
+          The production gold standard is a two-stage approach: Retrieve with high recall (Top 25-50) using vector + BM25 hybrid search, then apply a Cross-Encoder Re-ranker (Cohere, BGE-Reranker) to select the Top 3-5 highest-precision chunks for the LLM prompt.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 6 -->
+  <div class="section" id="rag-triad">
+    <div class="section-header">
+      <div class="section-num">06</div>
+      <h2>Component 2: Generation Metrics &amp; The RAG Triad</h2>
+    </div>
+    <div class="card">
+      <p>
+        Generation metrics evaluate the quality of the LLM's response relative to the retrieved context and user query. Developed by TruLens and popularized by Ragas, the <strong>RAG Triad</strong> forms the core foundation:
+      </p>
+
+      <div class="flow-diagram">
+        <div class="triad-container">
+          <div class="triad-node query">User Query</div>
+          <div class="triad-edge">
+            <span>Context Precision</span>
+            Query ↔ Context
+          </div>
+          <div class="triad-node context">Retrieved Context</div>
+          <div class="triad-edge">
+            <span>Faithfulness (Groundedness)</span>
+            Context ↔ Answer
+          </div>
+          <div class="triad-node answer">Generated Answer</div>
+        </div>
+        <div style="text-align: center; margin-top: 8px;">
+          <div class="triad-edge" style="display: inline-block;">
+            <span>Answer Relevance</span>
+            Query ↔ Generated Answer
+          </div>
+        </div>
+      </div>
+
+      <div class="metric-grid">
+        <div class="metric-card green">
+          <div class="metric-header">
+            <span class="metric-name">1. Faithfulness (Groundedness)</span>
+            <span class="metric-tag pill-yes">Context ↔ Answer</span>
+          </div>
+          <p class="metric-desc">
+            Measures if the answer is derived <em>purely</em> from the retrieved context without introducing external assumptions or hallucinations.<br><br>
+            <strong>Calculation:</strong> Deconstruct the answer into discrete atomic claims. Use an LLM judge to verify if each claim is supported by the context.<br>
+            <code>Score = (Supported Claims) / (Total Claims)</code>
+          </p>
+        </div>
+
+        <div class="metric-card blue">
+          <div class="metric-header">
+            <span class="metric-name">2. Answer Relevance</span>
+            <span class="metric-tag pill-yes">Query ↔ Answer</span>
+          </div>
+          <p class="metric-desc">
+            Measures how directly the response answers the question asked, without being evasive, verbose, or tangential.<br><br>
+            <strong>Calculation:</strong> Prompt an LLM to generate 3 candidate questions that the response would answer. Compute cosine similarity between their embeddings and the original user query.
+          </p>
+        </div>
+
+        <div class="metric-card purple">
+          <div class="metric-header">
+            <span class="metric-name">3. Context Precision</span>
+            <span class="metric-tag pill-opt">Query ↔ Context</span>
+          </div>
+          <p class="metric-desc">
+            Evaluates whether the relevant chunks are positioned near the top of the context list.<br><br>
+            <strong>Calculation:</strong> For each retrieved chunk, check if it was useful in answering the reference question. Higher weight is given to relevant chunks at rank 1 and 2.
+          </p>
+        </div>
+
+        <div class="metric-card yellow">
+          <div class="metric-header">
+            <span class="metric-name">4. Context Recall</span>
+            <span class="metric-tag pill-yes">Reference ↔ Context</span>
+          </div>
+          <p class="metric-desc">
+            Measures whether all facts present in the ground-truth reference answer can be attributed to the retrieved context chunks.<br><br>
+            <strong>Calculation:</strong> <code>Context Recall = (Attributable Reference Sentences) / (Total Reference Sentences)</code>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 7 -->
+  <div class="section" id="faithfulness-vs-correctness">
+    <div class="section-header">
+      <div class="section-num">07</div>
+      <h2>Critical Distinction: Correctness vs. Faithfulness</h2>
+    </div>
+    <div class="card">
+      <p>
+        One of the most important concepts stressed in production RAG systems: <strong>Factual Correctness and Faithfulness are NOT the same thing.</strong>
+      </p>
+
+      <div class="compare-grid">
+        <div class="compare-box">
+          <h4>Faithfulness (Groundedness)</h4>
+          <ul>
+            <li>Evaluates adherence to the <em>provided retrieved document</em> only.</li>
+            <li>Does <strong>NOT</strong> require a golden reference dataset.</li>
+            <li>Answers: <em>"Did the model hallucinate beyond what it was given?"</em></li>
+          </ul>
+        </div>
+        <div class="compare-box">
+          <h4>Factual Correctness</h4>
+          <ul>
+            <li>Evaluates match against the <em>true real-world ground truth</em>.</li>
+            <li><strong>DOES</strong> require a golden reference answer.</li>
+            <li>Answers: <em>"Is the generated answer factually accurate in reality?"</em></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="highlight-example">
+        <strong>The "Refund Policy" Scenario (from Lecture):</strong><br>
+        <strong>User Query:</strong> <em>"What is the company refund policy?"</em><br>
+        <strong>Retrieved Doc Chunks:</strong> <em>"Under section 4.1, all digital purchases are strictly final. The company does not provide refunds under any circumstance."</em><br><br>
+        <strong>Scenario A (LLM responds with real-world law):</strong><br>
+        <em>"According to consumer protection regulations, you are entitled to a full refund within 14 days."</em><br>
+        &bull; <strong>Factual Correctness:</strong> High (in certain jurisdictions).<br>
+        &bull; <strong>Faithfulness Score:</strong> <strong>0.0 (Unfaithful hallucination)</strong> — completely fabricated relative to the company's internal document.<br><br>
+        <strong>Scenario B (Document contains an error):</strong><br>
+        Retrieved Doc states: <em>"The capital of Australia is Sydney."</em><br>
+        LLM responds: <em>"The capital of Australia is Sydney."</em><br>
+        &bull; <strong>Faithfulness Score:</strong> <strong>1.0 (100% faithful to context)</strong>.<br>
+        &bull; <strong>Factual Correctness:</strong> <strong>0.0 (Factually false in reality)</strong>.<br>
+        This diagnosis proves whether the bug is in your <em>knowledge base</em> or in your <em>LLM generation</em>!
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 8 -->
+  <div class="section" id="matrix">
+    <div class="section-header">
+      <div class="section-num">08</div>
+      <h2>Evaluation Matrix: What to Measure at Each Layer</h2>
+    </div>
+    <div class="card">
+      <p>
+        This summary matrix outlines each metric, the layer it inspects, whether an LLM judge is required, and whether a golden reference dataset is needed:
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Metric</th>
+            <th>Primary Measurement</th>
+            <th>Needs LLM?</th>
+            <th>Needs Golden Reference?</th>
+            <th>Target RAG Layer</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Recall@K</strong></td>
+            <td>Completeness (are key chunks missing?)</td>
+            <td><span class="pill pill-no">No</span></td>
+            <td><span class="pill pill-yes">Yes</span></td>
+            <td>Retrieval</td>
+          </tr>
+          <tr>
+            <td><strong>Precision@K</strong></td>
+            <td>Purity (how much noise was retrieved?)</td>
+            <td><span class="pill pill-no">No</span></td>
+            <td><span class="pill pill-yes">Yes</span></td>
+            <td>Retrieval</td>
+          </tr>
+          <tr>
+            <td><strong>Hit Rate@K</strong></td>
+            <td>At least one relevant chunk found</td>
+            <td><span class="pill pill-no">No</span></td>
+            <td><span class="pill pill-yes">Yes</span></td>
+            <td>Retrieval</td>
+          </tr>
+          <tr>
+            <td><strong>MRR</strong></td>
+            <td>Position of the 1st relevant document</td>
+            <td><span class="pill pill-no">No</span></td>
+            <td><span class="pill pill-yes">Yes</span></td>
+            <td>Retrieval / Ranking</td>
+          </tr>
+          <tr>
+            <td><strong>NDCG@K</strong></td>
+            <td>Graded relevance and ranking decay</td>
+            <td><span class="pill pill-no">No</span></td>
+            <td><span class="pill pill-yes">Yes</span></td>
+            <td>Re-ranking</td>
+          </tr>
+          <tr>
+            <td><strong>Faithfulness</strong></td>
+            <td>Context hallucination detection</td>
+            <td><span class="pill pill-yes">Yes (Judge)</span></td>
+            <td><span class="pill pill-no">No (Context only)</span></td>
+            <td>Generation</td>
+          </tr>
+          <tr>
+            <td><strong>Answer Relevance</strong></td>
+            <td>Response addresses original query</td>
+            <td><span class="pill pill-yes">Yes (Judge)</span></td>
+            <td><span class="pill pill-no">No (Query only)</span></td>
+            <td>Generation</td>
+          </tr>
+          <tr>
+            <td><strong>Context Precision</strong></td>
+            <td>Signal-to-noise ratio in prompt</td>
+            <td><span class="pill pill-yes">Yes (Judge)</span></td>
+            <td><span class="pill pill-yes">Yes</span></td>
+            <td>Prompt Assembly</td>
+          </tr>
+          <tr>
+            <td><strong>Context Recall</strong></td>
+            <td>Reference facts covered by context</td>
+            <td><span class="pill pill-yes">Yes (Judge)</span></td>
+            <td><span class="pill pill-yes">Yes</span></td>
+            <td>Retrieval / Context</td>
+          </tr>
+          <tr>
+            <td><strong>Factual Correctness</strong></td>
+            <td>Alignment with ground truth</td>
+            <td><span class="pill pill-yes">Yes (Judge)</span></td>
+            <td><span class="pill pill-yes">Yes</span></td>
+            <td>End-to-End Output</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Section 9 -->
+  <div class="section" id="ragas-code">
+    <div class="section-header">
+      <div class="section-num">09</div>
+      <h2>Implementation: Ragas with GPT-4o Evaluator</h2>
+    </div>
+    <div class="card">
+      <p>
+        The following implementation mirrors the course repository (<code>rag_evals/2_semanticrag_ast_eval.py</code>). It runs automated evaluation using Ragas 0.4+ with GPT-4o as judge:
+      </p>
+
+      <pre><code>import sys
+from openai import OpenAI
+from ragas import EvaluationDataset, SingleTurnSample, evaluate
+from ragas.metrics._context_precision import LLMContextPrecisionWithReference
+from ragas.metrics._context_recall import LLMContextRecall
+from ragas.metrics._faithfulness import Faithfulness
+from ragas.metrics._answer_relevance import AnswerRelevancy
+from ragas.metrics._factual_correctness import FactualCorrectness
+from ragas.llms import llm_factory
+from langchain_openai import OpenAIEmbeddings
+
+# 1. Assemble SingleTurnSample items from your RAG execution
+samples = []
+for tc in TEST_CASES:
+    answer, contexts = run_agent(agent, tc["question"])
+    samples.append(SingleTurnSample(
+        user_input=tc["question"],
+        response=answer,
+        retrieved_contexts=contexts,
+        reference=tc["reference"]
+    ))
+
+# 2. Configure LLM Judge and Embeddings
+openai_client = OpenAI()
+evaluator_llm = llm_factory("gpt-4o", client=openai_client)
+lc_embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+eval_dataset = EvaluationDataset(samples=samples)
+
+# 3. Execute Multi-Metric Evaluation
+results = evaluate(
+    dataset=eval_dataset,
+    metrics=[
+        LLMContextPrecisionWithReference(),
+        LLMContextRecall(),
+        Faithfulness(),
+        AnswerRelevancy(embeddings=lc_embeddings),
+        FactualCorrectness(),
+    ],
+    llm=evaluator_llm,
+)
+
+# 4. Generate Scorecard Table
+df = results.to_pandas()
+print("\n=== RAGAS EVALUATION SCORECARD ===")
+for col in ["faithfulness", "answer_relevancy", "context_recall", "llm_context_precision_with_reference"]:
+    avg = df[col].mean()
+    status = "✅ PASS" if avg >= 0.70 else "❌ FAIL"
+    print(f"{status} {col:&lt;38}: {avg:.3f}")</code></pre>
+
+      <div class="key-insight">
+        <h4>Target Score Thresholds in Production</h4>
+        <p>
+          &bull; <strong>Faithfulness &ge; 0.90:</strong> Hallucinations in high-stakes domains (legal, medical, financial) must be under 10%.<br>
+          &bull; <strong>Answer Relevance &ge; 0.85:</strong> Ensures users get concise, direct answers.<br>
+          &bull; <strong>Context Recall &ge; 0.80:</strong> Guarantees that at least 80% of necessary reference facts reach the LLM.<br>
+          &bull; <strong>Context Precision &ge; 0.75:</strong> Minimizes irrelevant context tokens.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 10 -->
+  <div class="section" id="production">
+    <div class="section-header">
+      <div class="section-num">10</div>
+      <h2>Production Loop &amp; Continuous Improvement</h2>
+    </div>
+    <div class="card">
+      <p>
+        Evaluation does not end once the model is deployed. A production RAG system continuously improves through the following feedback loop:
+      </p>
+
+      <div class="flow-diagram">
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="background: var(--accent); color: #fff; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;">1</div>
+            <div><strong>Production Logging:</strong> Log all user prompts, retrieved chunks, and generated answers using OpenTelemetry, Langfuse, or LangSmith.</div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="background: var(--accent2); color: #fff; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;">2</div>
+            <div><strong>Triage Failures:</strong> Filter sessions with low online confidence scores, thumbs-down clicks, or user retry messages.</div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="background: var(--accent4); color: #fff; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;">3</div>
+            <div><strong>Human Review &amp; Golden Set Expansion:</strong> Engineers diagnose the root cause (retrieval miss vs LLM hallucination), write the ground truth answer, and add it to the Golden Dataset.</div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="background: var(--accent3); color: #fff; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;">4</div>
+            <div><strong>CI/CD Regression Testing:</strong> Run the updated Ragas test suite on every pull request before merging changes to chunking or indexing pipelines.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

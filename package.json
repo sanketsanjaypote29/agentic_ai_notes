@@ -1,0 +1,10 @@
+{
+  "name": "agentic-ai-notes-reader",
+  "version": "1.0.0",
+  "description": "Interactive reader for Agentic AI System Design course notes",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC"
+}

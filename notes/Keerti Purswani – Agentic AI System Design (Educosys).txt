@@ -1,0 +1,17 @@
+Keerti Purswani – Agentic AI System Design (Educosys)
+
+1 Intro to Agents, RAG
+2 AST, Lexical, Hybrid, Agentic RAG
+3 Types of RAGs, Eval Metrics
+4 RAG Eval Comparison
+5 RAG Types, Context Engineering
+6 Memory
+7 Claude Code Project
+8 Project, MCP
+9 MCP, Skills, Intro to Long Running Tasks
+10 Safety, Long Running Tasks
+11 Claude Code Design & Implementation
+12 Project Dicussions, Reindexing
+13 Semantic Caching, Langfuse, Scaling RAG, Sharding, Multi Tenancy
+14 Interview Quess, LLMOps
+15 Project Demos, Interview Discussion

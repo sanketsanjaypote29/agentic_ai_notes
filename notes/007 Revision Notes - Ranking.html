@@ -1,0 +1,746 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style>
+@charset "utf-8";
+
+:root { --bg: #0f1117; --surface: #1a1d27; --surface2: #22263a; --border: #2e3450; --accent: #6c8cff; --accent2: #a78bfa; --accent3: #34d399; --accent4: #f59e0b; --accent5: #f87171; --text: #e2e8f0; --text-muted: #8892b0; --code-bg: #131722; --tag-blue: #1e3a5f; --tag-purple: #2d1f4a; --tag-green: #1a3d2e; }
+
+* { box-sizing: border-box; margin: 0px; padding: 0px; }
+
+body { background: var(--bg); color: var(--text); font-family: "Segoe UI", system-ui, -apple-system, sans-serif; font-size: 15px; line-height: 1.7; padding: 40px 20px; }
+
+.container { max-width: 960px; margin: 0px auto; }
+
+.page-header { text-align: center; margin-bottom: 56px; }
+
+.page-header .badge { display: inline-block; background: var(--tag-blue); color: var(--accent); border: 1px solid var(--accent); border-radius: 20px; padding: 4px 16px; font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px; }
+
+h1 { font-size: 42px; font-weight: 800; background-image: ; background-position-x: ; background-position-y: ; background-size: ; background-repeat: ; background-attachment: ; background-origin: ; background-color: ; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 12px; }
+
+.subtitle { color: var(--text-muted); font-size: 17px; }
+
+.toc { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px 28px; margin-bottom: 48px; }
+
+.toc h3 { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 14px; }
+
+.toc ol { list-style: none; counter-reset: toc 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px 24px; }
+
+.toc li { counter-increment: toc 1; }
+
+.toc a { color: var(--accent); text-decoration: none; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+
+.toc a::before { content: counter(toc, decimal-leading-zero); color: var(--text-muted); font-size: 11px; font-weight: 600; }
+
+.toc a:hover { color: var(--accent2); }
+
+.section { margin-bottom: 56px; }
+
+.section-header { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+
+.section-num { width: 40px; height: 40px; border-radius: 10px; background: var(--tag-blue); border: 1px solid var(--accent); color: var(--accent); font-weight: 800; font-size: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+h2 { font-size: 26px; font-weight: 700; color: var(--text); }
+
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 20px; }
+
+.card-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 14px; }
+
+h3 { font-size: 18px; font-weight: 700; color: var(--accent2); margin: 28px 0px 14px; }
+
+h3:first-child { margin-top: 0px; }
+
+pre, code { font-family: "JetBrains Mono", "Fira Code", "Cascadia Code", monospace; font-size: 13px; }
+
+pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px 20px; overflow-x: auto; margin: 12px 0px; color: rgb(201, 209, 217); line-height: 1.8; }
+
+code { background: var(--code-bg); border: 1px solid var(--border); border-radius: 4px; padding: 2px 6px; color: var(--accent3); font-size: 12px; }
+
+.tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0px; }
+
+.tag { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; border: 1px solid; }
+
+.tag.blue { background: var(--tag-blue); color: var(--accent); border-color: var(--accent); }
+
+.tag.purple { background: var(--tag-purple); color: var(--accent2); border-color: var(--accent2); }
+
+.tag.green { background: var(--tag-green); color: var(--accent3); border-color: var(--accent3); }
+
+.tag.yellow { background: rgb(45, 32, 0); color: var(--accent4); border-color: var(--accent4); }
+
+.io-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0px; }
+
+.io-box { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px 18px; }
+
+.io-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+
+.io-label.in { color: var(--accent4); }
+
+.io-label.out { color: var(--accent3); }
+
+.io-box p { color: var(--text); font-size: 14px; }
+
+.algo-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 20px 22px; margin-bottom: 16px; }
+
+.algo-card h4 { font-size: 16px; font-weight: 700; color: var(--accent); margin-bottom: 10px; }
+
+.algo-card p { color: var(--text-muted); font-size: 14px; margin-bottom: 10px; }
+
+.checklist { list-style: none; margin: 12px 0px; }
+
+.checklist li { padding: 4px 0px; font-size: 14px; display: flex; align-items: flex-start; gap: 10px; }
+
+.checklist li::before { content: attr(data-icon); flex-shrink: 0; margin-top: 2px; }
+
+.flow { display: flex; flex-direction: column; align-items: center; gap: 0px; margin: 20px 0px; }
+
+.flow-box { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 28px; font-size: 14px; font-weight: 600; color: var(--text); min-width: 220px; text-align: center; }
+
+.flow-box.highlight { border-color: var(--accent); color: var(--accent); background: var(--tag-blue); }
+
+.flow-box.highlight2 { border-color: var(--accent2); color: var(--accent2); background: var(--tag-purple); }
+
+.flow-box.highlight3 { border-color: var(--accent3); color: var(--accent3); background: var(--tag-green); }
+
+.flow-arrow { color: var(--text-muted); font-size: 20px; line-height: 1; padding: 2px 0px; }
+
+.flow-plus { color: var(--text-muted); font-size: 18px; font-weight: 700; padding: 4px 0px; }
+
+.compare-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 20px 0px; }
+
+.compare-col { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 18px; }
+
+.compare-col h4 { font-size: 14px; font-weight: 700; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+
+.compare-col ul { list-style: none; font-size: 13px; color: var(--text-muted); }
+
+.compare-col ul li { padding: 4px 0px; display: flex; align-items: center; gap: 8px; }
+
+.compare-col ul li::before { content: "→"; color: var(--accent); }
+
+table { width: 100%; border-collapse: collapse; margin: 20px 0px; font-size: 14px; }
+
+th { background: var(--surface2); color: var(--text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border); }
+
+td { padding: 12px 16px; border-bottom: 1px solid var(--border); color: var(--text); }
+
+tr:last-child td { border-bottom-width: medium; border-bottom-style: none; border-bottom-color: currentcolor; }
+
+tr:hover td { background: var(--surface2); }
+
+.badge-pill { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+
+.pill-low { background: var(--tag-green); color: var(--accent3); }
+
+.pill-vlow { background: rgb(26, 61, 46); color: rgb(110, 231, 183); }
+
+.pill-high { background: rgb(61, 26, 26); color: var(--accent5); }
+
+.pill-yes { color: var(--accent3); }
+
+.pill-no { color: var(--accent5); }
+
+.note { background: rgb(28, 34, 48); border-left: 3px solid var(--accent); border-radius: 0px 8px 8px 0px; padding: 14px 18px; margin: 16px 0px; font-size: 14px; color: var(--text-muted); }
+
+.note strong { color: var(--text); }
+
+.takeaway { background: linear-gradient(135deg, rgb(17, 24, 39), rgb(26, 29, 39)); border: 1px solid var(--accent); border-radius: 14px; padding: 28px 32px; margin-top: 48px; }
+
+.takeaway h2 { color: var(--accent); margin-bottom: 24px; }
+
+.pipeline { background: var(--code-bg); border: 1px solid var(--border); border-radius: 12px; padding: 28px; display: flex; flex-direction: column; align-items: center; gap: 0px; margin: 20px 0px; }
+
+.pipeline-step { display: flex; align-items: center; gap: 12px; }
+
+.pipeline-box { padding: 10px 24px; border-radius: 8px; font-size: 14px; font-weight: 600; text-align: center; min-width: 200px; }
+
+.pipeline-arrow { color: var(--text-muted); font-size: 22px; padding: 3px 0px; text-align: center; }
+
+.p-query { background: rgb(30, 48, 64); color: rgb(103, 200, 255); border: 1px solid rgb(103, 200, 255); }
+
+.p-bm25 { background: var(--tag-blue); color: var(--accent); border: 1px solid var(--accent); }
+
+.p-vec { background: var(--tag-purple); color: var(--accent2); border: 1px solid var(--accent2); }
+
+.p-rrf { background: rgb(45, 32, 0); color: var(--accent4); border: 1px solid var(--accent4); }
+
+.p-100 { background: rgb(26, 26, 46); color: rgb(201, 184, 255); border: 1px solid rgb(74, 63, 138); }
+
+.p-cross { background: rgb(42, 26, 26); color: var(--accent5); border: 1px solid var(--accent5); }
+
+.p-llm { background: var(--tag-green); color: var(--accent3); border: 1px solid var(--accent3); }
+
+.pipe-label { color: var(--text-muted); font-size: 11px; margin-left: 8px; }
+
+.pipe-dual { display: flex; gap: 16px; align-items: center; }
+
+.pipe-plus { color: var(--text-muted); font-weight: 800; font-size: 18px; }
+
+hr { border-right-width: medium; border-bottom-width: medium; border-left-width: medium; border-right-style: none; border-bottom-style: none; border-left-style: none; border-right-color: currentcolor; border-bottom-color: currentcolor; border-left-color: currentcolor; border-image: initial; border-top: 1px solid var(--border); margin: 40px 0px; }
+
+.intro-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 28px 32px; margin-bottom: 40px; }
+
+.intro-card h2 { font-size: 22px; color: var(--text); margin-bottom: 16px; }
+
+.intro-card p { color: var(--text-muted); font-size: 15px; margin-bottom: 12px; }
+
+.intro-card p:last-child { margin-bottom: 0px; }
+
+.intro-card strong { color: var(--text); }
+
+.arch-diagram { margin: 32px 0px; display: flex; flex-direction: column; gap: 0px; }
+
+.arch-zone { border-radius: 12px; padding: 20px 24px; position: relative; }
+
+.arch-zone-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+
+.arch-zone-label .dot { width: 8px; height: 8px; border-radius: 50%; }
+
+.zone-db { background: rgb(17, 28, 46); border: 2px solid var(--accent); }
+
+.zone-app { background: rgb(22, 18, 42); border: 2px solid var(--accent2); margin-top: 12px; }
+
+.zone-db .arch-zone-label { color: var(--accent); }
+
+.zone-db .dot { background: var(--accent); }
+
+.zone-app .arch-zone-label { color: var(--accent2); }
+
+.zone-app .dot { background: var(--accent2); }
+
+.arch-stages { display: flex; gap: 12px; flex-wrap: wrap; }
+
+.arch-stage-box { flex: 1 1 0%; min-width: 180px; background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; }
+
+.arch-stage-box .stage-name { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+
+.arch-stage-box .stage-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+
+.stage-name.blue { color: var(--accent); }
+
+.stage-name.purple { color: var(--accent2); }
+
+.stage-name.red { color: var(--accent5); }
+
+.arch-arrow { text-align: center; color: var(--text-muted); font-size: 22px; padding: 8px 0px; }
+
+.arch-connector { display: flex; align-items: center; gap: 12px; padding: 10px 0px; }
+
+.arch-connector-line { flex: 1 1 0%; height: 1px; border-top: 2px dashed var(--border); }
+
+.arch-connector-label { font-size: 11px; color: var(--text-muted); background: var(--bg); padding: 2px 10px; border-radius: 10px; border: 1px solid var(--border); white-space: nowrap; }
+
+@media (max-width: 640px) {
+  h1 { font-size: 28px; }
+  .toc ol { grid-template-columns: 1fr; }
+  .io-grid { grid-template-columns: 1fr; }
+  .compare-grid { grid-template-columns: 1fr; }
+  .arch-stages { flex-direction: column; }
+}
+
+</style>
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ranking in RAG</title>
+  
+
+<style>
+/* Reset & iframe compatibility */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto !important;
+}
+</style>
+
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="page-header">
+    <h1>Ranking in RAG</h1>
+    <p class="subtitle">Retrieval Ranking · Fusion Ranking · Re-ranking — end to end</p>
+  </div>
+
+  <!-- What is Ranking -->
+  <div class="intro-card">
+    <h2>What is Ranking?</h2>
+    <p>
+      When a user sends a query to a RAG system, there are potentially millions of documents in the corpus. <strong>Ranking is the process of ordering documents by how relevant they are to the query</strong> — so the best documents reach the LLM and the noise does not.
+    </p>
+    <p>
+      Without ranking, the LLM receives a random or arbitrary selection of chunks. With ranking, it receives the most relevant, diverse, and high-quality context — which directly determines the quality of the generated answer.
+    </p>
+    <p>
+      Ranking in RAG is not a single step. It can happen at up to three distinct stages, each with a different purpose, different cost, and critically — running in a different location. Some stages happen inside the database, others happen in your application code. Not all three are required — the simplest pipeline uses only retrieval ranking. Fusion is added when you have multiple retrievers. Re-ranking is added when you need higher precision and can afford the cost.
+    </p>
+  </div>
+
+  <!-- Architecture Boundary Diagram -->
+  <div class="arch-diagram">
+
+    <div class="arch-zone zone-db">
+      <div class="arch-zone-label">
+        <div class="dot"></div>
+        Inside the Vector DB / Search Engine
+      </div>
+      <div class="arch-stages">
+        <div class="arch-stage-box">
+          <div class="stage-name blue">Stage 1 — Retrieval Ranking</div>
+          <div class="stage-desc">The DB scores and orders documents internally using BM25, cosine similarity, dot product, etc. Your app only sees the output — a ranked Top-K list. You do not control this ranking directly; you choose the retriever and its parameters.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="arch-connector">
+      <div class="arch-connector-line"></div>
+      <div class="arch-connector-label">Top-K results returned to your application</div>
+      <div class="arch-connector-line"></div>
+    </div>
+
+    <div class="arch-zone zone-app">
+      <div class="arch-zone-label">
+        <div class="dot"></div>
+        Outside the DB — in your Application / RAG Orchestration Layer
+      </div>
+      <div class="arch-stages">
+        <div class="arch-stage-box">
+          <div class="stage-name purple">Stage 2 — Fusion Ranking</div>
+          <div class="stage-desc">Your app receives ranked lists from multiple retrievers (BM25 + vector). It merges them using RRF or weighted fusion. No model inference. Runs in your orchestration code (LangChain, LlamaIndex, custom).</div>
+        </div>
+        <div class="arch-stage-box">
+          <div class="stage-name red">Stage 3 — Re-ranking</div>
+          <div class="stage-desc">Your app calls a cross encoder or reranker API on a candidate set (however many you retrieved). The reranker reads each (query, document) pair and assigns a precise relevance score. Runs as a separate ML model call in your pipeline.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 1. Retrieval Ranking -->
+  <div class="section" id="retrieval">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <h2>Retrieval Ranking</h2>
+    </div>
+
+    <p style="color:var(--text-muted); margin-bottom:20px;">
+      The <strong style="color:var(--text)">first ranking stage</strong> — happens <em>inside</em> the retrieval system itself (vector database or search engine) before anything else sees the results.
+    </p>
+
+    <div class="io-grid">
+      <div class="io-box">
+        <div class="io-label in">Input</div>
+        <p>A user query string</p>
+      </div>
+      <div class="io-box">
+        <div class="io-label out">Output</div>
+        <p>Top-K documents ranked by relevance score</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Algorithms</div>
+
+      <h3>Sparse / Lexical Methods</h3>
+
+      <div class="algo-card">
+        <h4>BM25 (Best Match 25)</h4>
+        <p>Term-frequency based ranking. The standard for keyword search. Used heavily in Elasticsearch and OpenSearch. Penalizes over-repetition of terms (saturation) and accounts for document length.</p>
+        <pre>Score(D, Q) = Σ IDF(qi) × [ f(qi,D) × (k1+1) ] / [ f(qi,D) + k1 × (1 - b + b × |D|/avgdl) ]</pre>
+        <div class="tags">
+          <span class="tag blue">No neural model</span>
+          <span class="tag green">Fast</span>
+          <span class="tag yellow">Exact term match</span>
+        </div>
+      </div>
+
+      <div class="algo-card">
+        <h4>TF-IDF</h4>
+        <p>Predecessor to BM25. Weights terms by how frequent they are in the document vs how rare across the corpus. Still used in simpler pipelines.</p>
+        <pre>Score = TF(t,d) × log(N / df(t))</pre>
+      </div>
+
+      <div class="algo-card">
+        <h4>SPLADE</h4>
+        <p>Learned sparse representations. Expands query/document with related terms using a transformer, but keeps the output in a sparse bag-of-words format. Best of both worlds: semantic + sparse efficiency.</p>
+        <div class="tags">
+          <span class="tag purple">Transformer-based</span>
+          <span class="tag blue">Sparse output</span>
+        </div>
+      </div>
+
+      <h3>Dense / Semantic Methods</h3>
+
+      <div class="algo-card">
+        <h4>Cosine Similarity</h4>
+        <p>Measures the angle between query and document embedding vectors. Range: −1 to 1. Most common metric for dense retrieval. Normalizes vector magnitude.</p>
+        <pre>cos(θ) = (A · B) / (||A|| × ||B||)</pre>
+        <div class="tags"><span class="tag blue">Dense vectors</span><span class="tag green">Normalized</span></div>
+      </div>
+
+      <div class="algo-card">
+        <h4>Dot Product (Inner Product)</h4>
+        <p>Faster than cosine similarity. Does not normalize — magnitude matters. Used when embeddings are already normalized (e.g., OpenAI embeddings), in which case it's equivalent to cosine.</p>
+        <pre>Score = A · B = Σ AᵢBᵢ</pre>
+        <div class="tags"><span class="tag green">Fastest</span><span class="tag yellow">Magnitude-sensitive</span></div>
+      </div>
+
+      <div class="algo-card">
+        <h4>DPR (Dense Passage Retrieval)</h4>
+        <p>Dual-encoder model. Query encoder and passage encoder trained separately with contrastive learning. Query and document embeddings are computed independently, enabling precomputed document indices.</p>
+        <pre>Score = E_query(q) · E_passage(p)</pre>
+        <div class="tags"><span class="tag purple">Bi-encoder</span><span class="tag blue">FAISS-compatible</span></div>
+      </div>
+
+      <div class="algo-card">
+        <h4>ColBERT (Retrieval mode)</h4>
+        <p>Late interaction model. Encodes every token in query and document separately, then computes MaxSim: for each query token, find the most similar document token.</p>
+        <pre>Score = Σq max_d (Eq · Ed^T)</pre>
+        <div class="tags"><span class="tag purple">Token-level</span><span class="tag blue">Late interaction</span><span class="tag green">Scalable</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Where Retrieval Ranking Runs</div>
+      <div class="tags">
+        <span class="tag blue">Elasticsearch</span>
+        <span class="tag blue">OpenSearch</span>
+        <span class="tag blue">Pinecone</span>
+        <span class="tag blue">Qdrant</span>
+        <span class="tag blue">Weaviate</span>
+        <span class="tag blue">Milvus</span>
+      </div>
+    </div>
+
+    <div class="note">
+      <strong>Example — Query:</strong> "How does Kafka replication work?"<br>
+      BM25 output: 1. Doc A &nbsp; 2. Doc B &nbsp; 3. Doc C<br>
+      This stage is cheap and fast — it narrows thousands of documents down to Top-K candidates.
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- 2. Fusion Ranking -->
+  <div class="section" id="fusion">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <h2>Fusion Ranking</h2>
+    </div>
+
+    <p style="color:var(--text-muted); margin-bottom:20px;">
+      <strong style="color:var(--text)">Problem:</strong> Different retrievers find different relevant documents. We want to combine multiple ranked lists into a single, better list — without re-reading any document text.
+    </p>
+
+    <div class="card">
+      <div class="card-title">The Problem Illustrated</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+        <pre>BM25 Results:
+1. Doc A  ← keyword match
+2. Doc B
+3. Doc C</pre>
+        <pre>Vector Search:
+1. Doc C  ← semantic match
+2. Doc A
+3. Doc D  ← only found here</pre>
+      </div>
+      <p style="color:var(--text-muted); font-size:14px; margin-top:8px;">Doc D only appears in vector search. Doc A appears in both but at different ranks. Fusion merges these intelligently.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Algorithm 1 — Reciprocal Rank Fusion (RRF)</div>
+      <p style="color:var(--text-muted); font-size:14px; margin-bottom:14px;">The most popular fusion method in modern RAG. Simple, robust, and parameter-free (except <code>k</code>). Invented by researchers at Google/Waterloo.</p>
+
+      <pre>Score(doc) = Σ  1 / (k + rank_i(doc))
+
+where:
+  k     = constant (typically 60) to dampen high-rank dominance
+  rank  = position in retriever i's ranked list (1-indexed)
+  Σ     = sum across all retrievers</pre>
+
+      <h3>Worked Example</h3>
+      <pre>Doc A: BM25 rank=1, Vector rank=2
+  RRF = 1/(60+1) + 1/(60+2) = 0.01639 + 0.01613 = 0.03252
+
+Doc C: BM25 rank=3, Vector rank=1
+  RRF = 1/(60+3) + 1/(60+1) = 0.01587 + 0.01639 = 0.03226
+
+Doc D: only in Vector rank=3
+  RRF = 1/(60+3) = 0.01587
+
+Final order: A → C → B → D</pre>
+
+      <div class="note">
+        <strong>Why k=60?</strong> Prevents a document ranked #1 from dominating over documents ranked #2 or #3. The difference between rank 1 and rank 2 shrinks as k grows.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Algorithm 2 — Weighted Score Fusion</div>
+      <p style="color:var(--text-muted); font-size:14px; margin-bottom:14px;">Combines raw scores directly. Requires scores to be on comparable scales (normalize first). α is a tunable hyperparameter.</p>
+      <pre>Final Score = α × BM25_score + (1 - α) × Vector_score
+
+Example: α = 0.4
+  Final = 0.4 × BM25 + 0.6 × Vector</pre>
+      <div class="note">
+        <strong>Gotcha:</strong> BM25 scores are unbounded; vector similarity is typically −1 to 1. Min-max normalize each before combining, or use RRF to avoid this problem.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">What Fusion Does and Does NOT Do</div>
+      <ul class="checklist">
+        <li data-icon="✅">Combines rankings from multiple retrieval systems</li>
+        <li data-icon="✅">Surfaces documents missed by one retriever</li>
+        <li data-icon="✅">Extremely cheap — no model inference</li>
+        <li data-icon="❌">Does NOT read document text</li>
+        <li data-icon="❌">Does NOT run a neural model</li>
+        <li data-icon="❌">Does NOT reassess relevance semantically</li>
+        <li data-icon="❌">Does NOT understand query meaning</li>
+      </ul>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- 3. Re-ranking -->
+  <div class="section" id="reranking">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <h2>Re-ranking</h2>
+    </div>
+
+    <p style="color:var(--text-muted); margin-bottom:20px;">
+      <strong style="color:var(--text)">Problem:</strong> The retrieved Top-100 documents still contain noise. We need a stronger, slower model to actually <em>read</em> query + document pairs and assign precise relevance scores.
+    </p>
+
+    <div class="io-grid">
+      <div class="io-box">
+        <div class="io-label in">Input</div>
+        <p>(Query, Document) pair</p>
+      </div>
+      <div class="io-box">
+        <div class="io-label out">Output</div>
+        <p>Relevance score per pair → re-ordered list</p>
+      </div>
+    </div>
+
+    <div class="note">
+      <strong>Example:</strong><br>
+      Query → Doc A = 0.71 &nbsp;|&nbsp; Doc B = 0.32 &nbsp;|&nbsp; Doc C = 0.95 &nbsp;|&nbsp; Doc D = 0.87<br>
+      Final order: <strong style="color:var(--accent3)">Doc C → Doc D → Doc A → Doc B</strong>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Algorithm 1 — Cross Encoder (Most Important)</div>
+
+      <div class="algo-card">
+        <h4>How it works</h4>
+        <p>Both query and document are concatenated and fed into a transformer together. Self-attention can attend across query and document tokens — capturing deep interactions impossible in bi-encoders.</p>
+        <div class="flow" style="margin:12px 0;">
+          <div class="flow-box">[CLS] Query [SEP] Document [SEP]</div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-box">Transformer (full attention)</div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-box highlight3">Relevance Score (0 to 1)</div>
+        </div>
+      </div>
+
+      <div class="algo-card">
+        <h4>Popular Cross Encoders</h4>
+        <ul class="checklist">
+          <li data-icon="→">BGE Reranker (BAAI) — open source, state of the art</li>
+          <li data-icon="→">Cohere Rerank — hosted API, easy integration</li>
+          <li data-icon="→">MonoT5 — T5-based sequence-to-sequence reranker</li>
+          <li data-icon="→">ms-marco-MiniLM — lightweight, fast</li>
+        </ul>
+      </div>
+
+      <div class="note">
+        <strong>Trade-off:</strong> Cross encoders are the most accurate method — but you must run one forward pass per (query, document) pair. For 100 candidates, that's 100 inference calls. Keep candidate pool manageable (Top-50 to Top-100).
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Algorithm 2 — ColBERT Re-ranking</div>
+      <div class="algo-card">
+        <h4>Late Interaction</h4>
+        <p>Encodes query and document separately (like bi-encoders), but stores per-token embeddings. At query time, computes MaxSim between every query token and every document token.</p>
+        <pre>Score = Σ_qi  max_dj  (Eq_i · Ed_j)
+
+For each query token: find the best matching document token.
+Sum across all query tokens.</pre>
+        <ul class="checklist" style="margin-top:10px;">
+          <li data-icon="✅">More accurate than standard bi-encoders</li>
+          <li data-icon="✅">Faster than full cross encoders</li>
+          <li data-icon="✅">Document embeddings precomputed offline</li>
+          <li data-icon="→">Used in: RAGatouille, ColBERT v2</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Algorithm 3 — Learning-to-Rank (LTR)</div>
+      <div class="algo-card">
+        <h4>Feature-based ML ranking</h4>
+        <p>Instead of running a transformer, extract hand-crafted features per (query, document) pair and train a gradient-boosted model or neural ranker on click/relevance data.</p>
+        <pre>Features per pair:
+  - BM25 score
+  - Embedding cosine similarity
+  - Document length
+  - Freshness / recency
+  - Click-through rate
+  - Popularity / page rank
+  ↓
+XGBoost / LightGBM / Neural ranker
+  ↓
+Relevance score</pre>
+        <h4 style="margin-top:14px;">Common LTR Models</h4>
+        <ul class="checklist">
+          <li data-icon="→">RankNet — pairwise neural ranking (early work from Burges)</li>
+          <li data-icon="→">LambdaMART — gradient boosted trees, optimizes NDCG directly</li>
+          <li data-icon="→">XGBoost Ranker — fast, widely used in production</li>
+          <li data-icon="→">ListNet / ListMLE — listwise approaches</li>
+        </ul>
+        <div class="tags" style="margin-top:12px;">
+          <span class="tag green">Very fast inference</span>
+          <span class="tag yellow">Needs training data</span>
+          <span class="tag blue">Good for personalization</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Algorithm 4 — MMR (Maximal Marginal Relevance)</div>
+      <div class="algo-card">
+        <h4>Diversity-aware re-ranking</h4>
+        <p>Addresses a common RAG failure: retrieving many nearly-identical chunks. MMR greedily selects documents that are relevant to the query AND dissimilar to already-selected documents.</p>
+        <pre>MMR(d) = λ × Sim(d, query) - (1-λ) × max_{d' ∈ S} Sim(d, d')
+
+where:
+  S   = already selected documents
+  λ   = relevance vs diversity trade-off (0 to 1)
+  Sim = cosine similarity</pre>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:12px;">
+          <div>
+            <p style="color:var(--accent5); font-size:12px; font-weight:700; margin-bottom:6px;">WITHOUT MMR</p>
+            <pre style="font-size:12px;">Chunk A   (score 0.92)
+Chunk A'  (score 0.91)
+Chunk A'' (score 0.90)
+Chunk A'''(score 0.89)
+→ All near-duplicates!</pre>
+          </div>
+          <div>
+            <p style="color:var(--accent3); font-size:12px; font-weight:700; margin-bottom:6px;">WITH MMR</p>
+            <pre style="font-size:12px;">Chunk A   (relevant)
+Chunk B   (different angle)
+Chunk C   (new info)
+Chunk D   (covers gap)
+→ Diverse context!</pre>
+          </div>
+        </div>
+
+        <div class="note" style="margin-top:12px;">
+          <strong>Why it matters for LLMs:</strong> Sending near-duplicate context wastes your context window and causes the LLM to hallucinate confidence in repeated facts. MMR gives the LLM broader coverage.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- 4. Comparison Table -->
+  <div class="section" id="comparison">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <h2>Stage Comparison</h2>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Stage</th>
+          <th>Purpose</th>
+          <th>Reads Doc Text?</th>
+          <th>Runs Neural Model?</th>
+          <th>Cost</th>
+          <th>Typical Scale</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong style="color:var(--accent)">Retrieval Ranking</strong></td>
+          <td>Find candidate documents from corpus</td>
+          <td><span class="pill-no">No (uses index)</span></td>
+          <td><span class="pill-no">No (BM25) / Yes (DPR)</span></td>
+          <td><span class="badge-pill pill-low">Low</span></td>
+          <td>Millions → Top-100</td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--accent4)">Fusion Ranking</strong></td>
+          <td>Combine multiple ranked lists</td>
+          <td><span class="pill-no">No</span></td>
+          <td><span class="pill-no">No</span></td>
+          <td><span class="badge-pill pill-vlow">Very Low</span></td>
+          <td>N × Top-100 → Top-100</td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--accent5)">Re-ranking</strong></td>
+          <td>Recompute relevance with stronger model</td>
+          <td><span class="pill-yes">Yes</span></td>
+          <td><span class="pill-yes">Yes</span></td>
+          <td><span class="badge-pill pill-high">High</span></td>
+          <td>Top-100 → Top-5/10</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr>
+
+  <!-- 5. Production Pipeline -->
+  <div class="section" id="pipeline">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <h2>Typical Production RAG Pipeline</h2>
+    </div>
+
+    <div class="pipeline">
+      <div class="flow-box highlight" style="background:#1e3040; border-color:#67c8ff; color:#67c8ff;">User Query</div>
+      <div class="pipeline-arrow">↓</div>
+
+      <div style="display:flex; gap:16px; align-items:center;">
+        <div class="flow-box highlight">BM25 Retrieval</div>
+        <div style="color:var(--text-muted); font-weight:800; font-size:20px;">+</div>
+        <div class="flow-box highlight2">Vector Retrieval</div>
+      </div>
+      <div class="pipeline-arrow">↓</div>
+
+      <div class="flow-box" style="background:#2d2000; border-color:var(--accent4); color:var(--accent4);">RRF Fusion</div>
+      <div class="pipeline-arrow">↓</div>
+
+      <div class="flow-box" style="background:#1a1a2e; border-color:#4a3f8a; color:#c9b8ff;">Top 100 Documents</div>
+      <div class="pipeline-arrow">↓</div>
+
+      <div class="flow-box" style="background:#2a1a1a; border-color:var(--accent5); color:var(--accent5);">Cross Encoder Re-ranking</div>
+      <div class="pipeline-arrow">↓</div>
+
+      <div class="flow-box" style="background:#1a2e20; border-color:var(--accent3); color:var(--accent3);">Top 5–10 Documents</div>
+      <div class="pipeline-arrow">↓</div>
+
+      <div class="flow-box highlight3" style="font-size:16px; padding:14px 32px;">LLM Generation</div>
+    </div>
+
+    <div class="note">
+      <strong>Design rationale:</strong> Retrieval is cheap — cast a wide net. Fusion is free — combine signals. Re-ranking is expensive — run it on a small set. LLM generation is most expensive — only feed it the best 5–10 docs to minimize hallucination and token cost.
+    </div>
+  </div>
+
+  <hr>
+</div>
+
+
+</body></html>

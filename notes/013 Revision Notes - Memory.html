@@ -1,0 +1,763 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style>
+@charset "utf-8";
+
+:root { --bg: #0f1117; --surface: #1a1d27; --surface2: #22263a; --border: #2e3250; --accent: #6c8fff; --accent2: #a78bfa; --accent3: #34d399; --accent4: #f59e0b; --accent5: #f87171; --text: #e2e8f0; --text-muted: #8892b0; --text-dim: #4a5578; --tag-bg: #1e2440; }
+
+* { box-sizing: border-box; margin: 0px; padding: 0px; }
+
+body { font-family: "Segoe UI", system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 2rem; max-width: 1100px; margin: 0px auto; }
+
+h1 { font-size: 2rem; font-weight: 700; color: var(--accent); margin-bottom: 0.25rem; }
+
+.subtitle { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 2.5rem; }
+
+h2 { font-size: 1.2rem; font-weight: 600; color: var(--text); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+
+h2 .icon { font-size: 1.1rem; }
+
+h3 { font-size: 1rem; font-weight: 600; color: var(--accent); margin-bottom: 0.5rem; }
+
+.section { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
+
+.section.highlight { border-top-color: ; border-right-color: ; border-bottom-color: ; border-left: 4px solid var(--accent); }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
+
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-top: 1rem; }
+
+.card { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 1.1rem; }
+
+.card h3 { color: var(--accent2); }
+
+.card.green h3 { color: var(--accent3); }
+
+.card.amber h3 { color: var(--accent4); }
+
+.card.red h3 { color: var(--accent5); }
+
+.card.blue h3 { color: var(--accent); }
+
+ul { padding-left: 1.2rem; color: var(--text-muted); font-size: 0.9rem; }
+
+ul li { margin-bottom: 0.35rem; }
+
+p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.5rem; }
+
+code { background: var(--tag-bg); color: var(--accent3); padding: 0.15rem 0.45rem; border-radius: 4px; font-size: 0.82rem; font-family: "JetBrains Mono", "Fira Code", monospace; }
+
+.formula { background: var(--tag-bg); border: 1px solid var(--border); border-radius: 6px; padding: 0.75rem 1rem; font-family: "JetBrains Mono", monospace; font-size: 0.85rem; color: var(--accent3); margin: 0.5rem 0px; overflow-x: auto; white-space: pre; }
+
+.tag { display: inline-block; background: var(--tag-bg); border: 1px solid var(--border); color: var(--accent2); border-radius: 20px; padding: 0.2rem 0.65rem; font-size: 0.75rem; margin: 0.2rem 0.1rem; }
+
+.tag.green { color: var(--accent3); }
+
+.tag.amber { color: var(--accent4); }
+
+.tag.red { color: var(--accent5); }
+
+.tag.blue { color: var(--accent); }
+
+.pipeline { display: flex; align-items: center; gap: 0px; margin: 1rem 0px; flex-wrap: wrap; }
+
+.pipeline-step { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 0.6rem 1rem; font-size: 0.85rem; color: var(--text); text-align: center; min-width: 110px; }
+
+.pipeline-arrow { color: var(--text-dim); font-size: 1.2rem; padding: 0px 0.3rem; }
+
+.comparison-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin-top: 1rem; }
+
+.comparison-table th { background: var(--surface2); color: var(--accent); padding: 0.65rem 1rem; text-align: left; border-bottom: 2px solid var(--border); }
+
+.comparison-table td { padding: 0.6rem 1rem; border-bottom: 1px solid var(--border); color: var(--text-muted); vertical-align: top; }
+
+.comparison-table tr:last-child td { border-bottom-width: medium; border-bottom-style: none; border-bottom-color: currentcolor; }
+
+.comparison-table tr:hover td { background: var(--surface2); }
+
+.dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 0.4rem; }
+
+.dot.blue { background: var(--accent); }
+
+.dot.purple { background: var(--accent2); }
+
+.dot.green { background: var(--accent3); }
+
+.dot.amber { background: var(--accent4); }
+
+.dot.red { background: var(--accent5); }
+
+.pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 0.75rem; }
+
+.pros, .cons { background: var(--tag-bg); border-radius: 6px; padding: 0.75rem; }
+
+.pros { border-left: 3px solid var(--accent3); }
+
+.cons { border-left: 3px solid var(--accent5); }
+
+.pros h4 { color: var(--accent3); font-size: 0.8rem; margin-bottom: 0.4rem; }
+
+.cons h4 { color: var(--accent5); font-size: 0.8rem; margin-bottom: 0.4rem; }
+
+.divider { border-right-width: medium; border-bottom-width: medium; border-left-width: medium; border-right-style: none; border-bottom-style: none; border-left-style: none; border-right-color: currentcolor; border-bottom-color: currentcolor; border-left-color: currentcolor; border-image: initial; border-top: 1px solid var(--border); margin: 1.5rem 0px; }
+
+.note-box { background: rgb(26, 36, 64); border: 1px solid rgb(42, 58, 106); border-radius: 6px; padding: 0.75rem 1rem; font-size: 0.85rem; color: rgb(144, 170, 212); margin-top: 0.75rem; }
+
+.pipe-block { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem 1.5rem; margin-bottom: 1rem; display: flex; gap: 1.2rem; align-items: flex-start; }
+
+.pipe-num { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 700; flex-shrink: 0; margin-top: 2px; }
+
+.pipe-body { flex: 1 1 0%; min-width: 0px; }
+
+.pipe-title { font-size: 1rem; font-weight: 600; margin-bottom: 0.15rem; }
+
+.pipe-subtitle { font-size: 0.82rem; color: var(--text-dim); margin-bottom: 0.75rem; }
+
+.pipe-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 0.75rem; }
+
+.tree-block { background: var(--tag-bg); border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.2rem; font-family: "JetBrains Mono", monospace; font-size: 0.82rem; line-height: 1.9; overflow-x: auto; }
+
+.tree-block .t-root { color: var(--accent); }
+
+.tree-block .t-mid { color: var(--accent2); }
+
+.tree-block .t-leaf { color: var(--text-muted); }
+
+.tree-block .t-green { color: var(--accent3); }
+
+.tree-block .t-amber { color: var(--accent4); }
+
+.tree-block .t-red { color: var(--accent5); }
+
+.mem-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.1rem; margin-bottom: 0.6rem; }
+
+.mem-card .mem-label { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.3rem; }
+
+.mem-card .mem-desc { font-size: 0.88rem; color: var(--text-muted); line-height: 1.55; }
+
+.mem-card .mem-question { font-size: 0.78rem; margin-top: 0.4rem; font-family: "JetBrains Mono", monospace; }
+
+.mem-semantic .mem-label, .mem-semantic .mem-question { color: var(--accent3); }
+
+.mem-episodic .mem-label, .mem-episodic .mem-question { color: var(--accent); }
+
+.mem-procedural .mem-label, .mem-procedural .mem-question { color: var(--accent4); }
+
+@media (max-width: 700px) {
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .pros-cons { grid-template-columns: 1fr; }
+  .pipe-block { flex-direction: column; }
+}
+
+</style>
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memory in Agentic AI Systems</title>
+  
+
+<style>
+/* Reset & iframe compatibility */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto !important;
+}
+</style>
+
+</head>
+<body>
+  <h1>Memory in Agentic AI Systems</h1>
+  <p class="subtitle">How agents store, retrieve, and manage information - within a session and across sessions.</p>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 1. Overview -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="section highlight">
+    <h2><span class="icon">📌</span> LLMs are Stateless</h2>
+    <p>
+      By default, LLMs are completely stateless. Every call is independent - the model has no memory of
+      prior conversations, no awareness of who the user is, and no knowledge of what it did in a previous session.
+      Each request starts from zero. Memory is the layer engineers add on top to give agents continuity,
+      personalization, and the ability to reason across time.
+    </p>
+
+    <div class="note-box" style="margin: 0.75rem 0">
+      <strong>Two fundamental layers:</strong> <em>Short-term memory</em> handles the current task or session.
+      <em>Long-term memory</em> persists facts, events, and skills across tasks and sessions.
+      Production agentic systems need both.
+    </div>
+
+    <div class="grid-2" style="margin-top:1rem">
+      <div class="card blue">
+        <h3>Short-Term Memory</h3>
+        <p>Everything relevant to the <strong>current task or session</strong> - conversation history, current plan, tool outputs, intermediate reasoning, agent state.</p>
+        <span class="tag blue">Session-scoped</span>
+      </div>
+      <div class="card green">
+        <h3>Long-Term Memory</h3>
+        <p>Information retained <strong>across tasks and sessions</strong> - user facts, past events, skills, and workflows. Survives indefinitely.</p>
+        <span class="tag green">Cross-session</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 3. Short-Term Memory -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="section highlight">
+    <h2><span class="icon">⚡</span> Short-Term Memory (Working Memory)</h2>
+    <p>
+      Short-term memory holds everything relevant to the <strong>current task or session</strong>.
+      It is typically assembled into the context window before each LLM call, giving the model direct, zero-latency access
+      to the current working state.
+    </p>
+
+    <ul style="margin-top:0.75rem; line-height:2">
+      <li><strong>Conversation history</strong> - all prior user and assistant turns in the session</li>
+      <li><strong>Current plan</strong> - active task list, goals, and next steps</li>
+      <li><strong>Tool outputs</strong> - API responses, code execution results, search outputs</li>
+      <li><strong>Scratchpad</strong> - intermediate reasoning and chain-of-thought steps</li>
+      <li><strong>Agent state</strong> - workflow position, loop counters, execution flags</li>
+      <li><strong>Working context</strong> - retrieved docs or preferences injected for this call</li>
+    </ul>
+
+    <hr class="divider">
+
+    <h3>Storage - not just RAM</h3>
+    <p>
+      Short-term memory is <strong>not necessarily stored only in RAM</strong>.
+      It can be persisted to durable storage and still be short-term, as long as it belongs to the
+      current task or session and is not intended as permanent cross-session knowledge.
+    </p>
+    <div class="grid-2" style="margin-top:0.5rem">
+      <div class="card">
+        <h3>Common storage backends</h3>
+        <ul>
+          <li>RAM / in-process dict</li>
+          <li>Redis (fast, ephemeral)</li>
+          <li>SQL / NoSQL checkpoints</li>
+          <li>Workflow state stores (LangGraph, Temporal)</li>
+          <li>File-based checkpoints for long-running agents</li>
+        </ul>
+      </div>
+      <div class="card green">
+        <h3>Key characteristic</h3>
+        <p>The defining property is <strong>scope</strong>, not storage medium.
+           If the data belongs to a current task and will not be consulted in future sessions as permanent knowledge,
+           it is short-term - regardless of where it lives physically.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 4. Managing Large Short-Term Memory -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="section">
+    <h2><span class="icon">🗜</span> Managing Large Short-Term Memory</h2>
+    <p>
+      As conversations and agent executions grow, context can exceed the model's context window.
+      These are the common techniques, and most production systems combine several of them.
+    </p>
+  </div>
+
+  <!-- Technique 1: Sliding Window -->
+  <div class="pipe-block">
+    <div class="pipe-num" style="background:#2a2060;color:var(--accent2);">1</div>
+    <div class="pipe-body">
+      <div class="pipe-title" style="color:var(--accent2)">Sliding Window</div>
+      <div class="pipe-subtitle">Keep only the most recent N messages.</div>
+      <div class="formula">Keep last 20 messages
+Discard older messages</div>
+      <div class="pipe-tags">
+        <span class="tag">Simplest approach</span>
+        <span class="tag blue">O(1) management</span>
+      </div>
+      <div class="pros-cons">
+        <div class="pros">
+          <h4>Pros</h4>
+          <ul>
+            <li>Simple to implement</li>
+            <li>Fast - no extra LLM calls</li>
+            <li>Zero cost overhead</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>Cons</h4>
+          <ul>
+            <li>Important older information is discarded</li>
+            <li>No compression - just truncation</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Technique 2: Summarization -->
+  <div class="pipe-block">
+    <div class="pipe-num" style="background:#1a2440;color:var(--accent);">2</div>
+    <div class="pipe-body">
+      <div class="pipe-title" style="color:var(--accent)">Rolling Summarization</div>
+      <div class="pipe-subtitle">Periodically compress older messages into a running summary.</div>
+      <div class="formula">100 messages
+↓
+1 summary + recent messages</div>
+      <div class="pipe-tags">
+        <span class="tag blue">Token reduction</span>
+        <span class="tag blue">Preserves gist</span>
+      </div>
+      <div class="pros-cons">
+        <div class="pros">
+          <h4>Pros</h4>
+          <ul>
+            <li>Significant token reduction</li>
+            <li>Preserves important information</li>
+            <li>Maintains conversational continuity</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>Cons</h4>
+          <ul>
+            <li>Summary may lose fine-grained details</li>
+            <li>Errors can accumulate over many summarization cycles</li>
+            <li>Extra LLM call per summarization</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Technique 3: Message Trimming -->
+  <div class="pipe-block">
+    <div class="pipe-num" style="background:#0d2e24;color:var(--accent3);">3</div>
+    <div class="pipe-body">
+      <div class="pipe-title" style="color:var(--accent3)">Message Trimming</div>
+      <div class="pipe-subtitle">Remove low-value messages that add no signal.</div>
+      <div class="formula">Greetings, "thank you" messages,
+repeated confirmations → remove</div>
+      <div class="pipe-tags">
+        <span class="tag green">Easy token savings</span>
+        <span class="tag green">No LLM cost</span>
+      </div>
+      <div class="pros-cons">
+        <div class="pros">
+          <h4>Pros</h4>
+          <ul>
+            <li>Easy wins - often 5–20% token savings</li>
+            <li>No additional LLM calls</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>Cons</h4>
+          <ul>
+            <li>Requires heuristics to identify low-value content</li>
+            <li>Heuristics can misfire on edge cases</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Technique 4: Semantic Recall -->
+  <div class="pipe-block">
+    <div class="pipe-num" style="background:#2a2010;color:var(--accent4);">4</div>
+    <div class="pipe-body">
+      <div class="pipe-title" style="color:var(--accent4)">Semantic Recall</div>
+      <div class="pipe-subtitle">Move older history into a vector database - retrieve only what's relevant.</div>
+      <div class="formula">Current query: "What project was I working on?"
+↓ Embed query
+↓ Search vector store of past messages
+↓ Retrieve: "Last week user discussed educosys.com"
+↓ Inject into context</div>
+      <div class="pipe-tags">
+        <span class="tag amber">Vector DB</span>
+        <span class="tag amber">Embedding search</span>
+        <span class="tag amber">Fuzzy recall</span>
+      </div>
+      <div class="pros-cons">
+        <div class="pros">
+          <h4>Pros</h4>
+          <ul>
+            <li>Scales to very large histories</li>
+            <li>Only relevant information is injected</li>
+            <li>No hard token limit on total history</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>Cons</h4>
+          <ul>
+            <li>Retrieval quality depends on embeddings and search</li>
+            <li>May miss relevant context if query is poorly phrased</li>
+            <li>Added retrieval latency</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Technique 5: State Extraction -->
+  <div class="pipe-block">
+    <div class="pipe-num" style="background:#2e1a1a;color:var(--accent5);">5</div>
+    <div class="pipe-body">
+      <div class="pipe-title" style="color:var(--accent5)">State Extraction</div>
+      <div class="pipe-subtitle">Extract structured key facts instead of storing raw messages.</div>
+      <div class="formula">{
+  "name": "Keerti",
+  "goal": "Build educosys.com",
+  "preferred_language": "Python"
+}</div>
+      <div class="pipe-tags">
+        <span class="tag red">Structured state</span>
+        <span class="tag red">Token efficient</span>
+      </div>
+      <div class="pros-cons">
+        <div class="pros">
+          <h4>Pros</h4>
+          <ul>
+            <li>Extremely token efficient</li>
+            <li>Easy to maintain and update</li>
+            <li>Deterministic retrieval - no embedding needed</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>Cons</h4>
+          <ul>
+            <li>Works best for structured, factual information</li>
+            <li>Doesn't preserve full conversational detail</li>
+            <li>Requires extraction logic</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Technique 6: Hierarchical Summarization -->
+  <div class="pipe-block">
+    <div class="pipe-num" style="background:#2a2060;color:var(--accent2);">6</div>
+    <div class="pipe-body">
+      <div class="pipe-title" style="color:var(--accent2)">Hierarchical Summarization</div>
+      <div class="pipe-subtitle">Create summaries at multiple levels - for extremely long conversations.</div>
+      <div class="formula">100 Messages
+      ↓
+10 Summaries (per chunk)
+      ↓
+1 Higher-Level Summary</div>
+      <div class="pipe-tags">
+        <span class="tag">Multi-level</span>
+        <span class="tag blue">RAPTOR-style</span>
+      </div>
+      <div class="pros-cons">
+        <div class="pros">
+          <h4>Pros</h4>
+          <ul>
+            <li>Handles extremely long conversations</li>
+            <li>Coarse summaries for high-level questions</li>
+            <li>Leaf summaries for detail questions</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>Cons</h4>
+          <ul>
+            <li>Risk of information loss across layers</li>
+            <li>Multiple LLM calls per compression cycle</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Technique 7: Context Compression -->
+  <div class="pipe-block">
+    <div class="pipe-num" style="background:#0d2e24;color:var(--accent3);">7</div>
+    <div class="pipe-body">
+      <div class="pipe-title" style="color:var(--accent3)">Context Compression</div>
+      <div class="pipe-subtitle">Use an LLM to rewrite history into a shorter, information-dense representation.</div>
+      <div class="formula">Original:   5000 tokens
+Compressed:  800 tokens</div>
+      <div class="pipe-tags">
+        <span class="tag green">LLM-compressed</span>
+        <span class="tag green">High fidelity</span>
+      </div>
+      <p>A smaller or cheaper model rewrites the conversation history, preserving nuance that simple summarization loses. More detailed than a bullet-point summary.</p>
+      <div class="pros-cons">
+        <div class="pros">
+          <h4>Pros</h4>
+          <ul>
+            <li>More detailed than simple summarization</li>
+            <li>Preserves tone, intent, and nuance</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>Cons</h4>
+          <ul>
+            <li>Additional LLM cost per compression</li>
+            <li>Compression may introduce subtle errors</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Common production pattern -->
+  <div class="section highlight">
+    <h2><span class="icon">🏭</span> Common Production Pattern</h2>
+    <p>
+      Most modern agentic systems <strong>combine multiple approaches</strong>. Relying on any single technique is rare.
+      The most common hybrid pattern:
+    </p>
+    <div class="formula">Recent Messages          ← sliding window of last N turns
+      +
+Running Summary          ← rolling compression of older turns
+      +
+Retrieved Memories       ← semantic recall from vector store
+      +
+Structured State         ← extracted user profile / preferences</div>
+    <div class="note-box" style="margin-top:0.75rem">
+      <strong>Example:</strong> Keep the last 10 messages verbatim + a running conversation summary +
+      relevant memories retrieved from history + user profile (name, goal, preferred language).
+      This covers recency, compression, fuzzy recall, and structured facts - all in one context.
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 5. Long-Term Memory -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="section highlight">
+    <h2><span class="icon">🗄</span> Long-Term Memory</h2>
+    <p>
+      Long-term memory persists <strong>outside the context window</strong> in external stores.
+      It survives across sessions, and is selectively retrieved into
+      context when relevant.
+    </p>
+
+    <div class="grid-3" style="margin-top:1rem">
+      <div class="card blue">
+        <h3>Personalization</h3>
+        <p>The agent knows the user's preferences, role, and history without re-asking on every session.</p>
+      </div>
+      <div class="card green">
+        <h3>Historical recall</h3>
+        <p>Past events, prior decisions, and completed tasks are accessible across sessions and agents.</p>
+      </div>
+      <div class="card amber">
+        <h3>Knowledge retention</h3>
+        <p>Domain facts, SOPs, and learned workflows persist and can be reused without re-derivation.</p>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <h3>The three long-term memory types</h3>
+    <p>The distinction is <strong>conceptual, not storage-based</strong>. All three may be stored in the same database. What differs is the type of information they represent.</p>
+
+    <div style="margin-top:1rem">
+      <div class="mem-card mem-semantic">
+        <div class="mem-label">🟢 Semantic Memory</div>
+        <div class="mem-desc">Stores <strong>facts and knowledge</strong> - what the agent knows. Does not depend on when it was learned.</div>
+        <div class="mem-question">Question answered: "What do I know?"</div>
+      </div>
+      <div class="mem-card mem-episodic">
+        <div class="mem-label">🔵 Episodic Memory</div>
+        <div class="mem-desc">Stores <strong>events and experiences</strong> - what happened, when, with whom. Enables recall of prior interactions.</div>
+        <div class="mem-question">Question answered: "What happened before?"</div>
+      </div>
+      <div class="mem-card mem-procedural">
+        <div class="mem-label">🟡 Procedural Memory</div>
+        <div class="mem-desc">Stores <strong>skills and workflows</strong> - how to do things. Instructions, SOPs, and behavioral patterns.</div>
+        <div class="mem-question">Question answered: "How do I do it?"</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Semantic Memory -->
+  <div class="pipe-block">
+    <div class="pipe-num" style="background:#0d2e24;color:var(--accent3);">S</div>
+    <div class="pipe-body">
+      <div class="pipe-title" style="color:var(--accent3)">Semantic Memory - Facts &amp; Knowledge</div>
+      <div class="pipe-subtitle">General facts and user-specific knowledge that don't depend on when they were learned.</div>
+      <div class="pipe-tags">
+        <span class="tag green">User facts</span>
+        <span class="tag green">Domain knowledge</span>
+        <span class="tag green">Preferences</span>
+      </div>
+      <div class="grid-2">
+        <div>
+          <p><strong>Examples</strong></p>
+          <ul>
+            <li>User prefers vegetarian food</li>
+            <li>User is learning Agentic AI</li>
+            <li>User prefers Python over JavaScript</li>
+            <li>Company refund policy</li>
+            <li>Project-specific terminology</li>
+          </ul>
+        </div>
+        <div>
+          <p><strong>Common storage</strong></p>
+          <ul>
+            <li>Vector Database (fuzzy recall)</li>
+            <li>Key-Value Store (exact lookup)</li>
+            <li>Knowledge Graph (relational facts)</li>
+            <li>SQL Database (structured queries)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Episodic Memory -->
+  <div class="pipe-block">
+    <div class="pipe-num" style="background:#1a2440;color:var(--accent);">E</div>
+    <div class="pipe-body">
+      <div class="pipe-title" style="color:var(--accent)">Episodic Memory - Events &amp; Experiences</div>
+      <div class="pipe-subtitle">Records of past events - what happened, when, with whom.</div>
+      <div class="pipe-tags">
+        <span class="tag blue">Past interactions</span>
+        <span class="tag blue">Completed tasks</span>
+        <span class="tag blue">Time-stamped events</span>
+      </div>
+      <div class="grid-2">
+        <div>
+          <p><strong>Examples</strong></p>
+          <ul>
+            <li>Agent booked a flight yesterday</li>
+            <li>User completed a course last week</li>
+            <li>Previous conversation summaries</li>
+            <li>Prior decisions and their outcomes</li>
+            <li>"User asked about Python on Monday"</li>
+          </ul>
+        </div>
+        <div>
+          <p><strong>Common storage</strong></p>
+          <ul>
+            <li>Event Logs / append-only stores</li>
+            <li>Conversation History archives</li>
+            <li>SQL Database (filter by date/user)</li>
+            <li>Vector Database (semantic search)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Procedural Memory -->
+  <div class="pipe-block">
+    <div class="pipe-num" style="background:#2a2010;color:var(--accent4);">P</div>
+    <div class="pipe-body">
+      <div class="pipe-title" style="color:var(--accent4)">Procedural Memory - Skills &amp; Workflows</div>
+      <div class="pipe-subtitle">How to do things - instructions, SOPs, and behavioral rules the agent should follow consistently.</div>
+      <div class="pipe-tags">
+        <span class="tag amber">SOPs</span>
+        <span class="tag amber">Prompt templates</span>
+        <span class="tag amber">Workflow definitions</span>
+      </div>
+      <div class="grid-2">
+        <div>
+          <p><strong>Examples</strong></p>
+          <ul>
+            <li>Customer support escalation workflow</li>
+            <li>Monthly reporting process</li>
+            <li>Coding standards and style guides</li>
+            <li>User's preferred output format</li>
+            <li>Custom tool-use patterns</li>
+          </ul>
+        </div>
+        <div>
+          <p><strong>Common storage</strong></p>
+          <ul>
+            <li>Documents / Knowledge Bases</li>
+            <li>SOP Repositories</li>
+            <li>Prompt Templates</li>
+            <li>System Prompt (injected directly)</li>
+            <li>SQL Database (versioned workflows)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <div class="section">
+    <h2><span class="icon">📊</span> Memory Types at a Glance</h2>
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>Memory Type</th>
+          <th>Question Answered</th>
+          <th>What It Stores</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="dot blue"></span>Short-Term</td>
+          <td>What am I doing right now?</td>
+          <td>Conversation, plan, tools, state</td>
+        </tr>
+        <tr>
+          <td><span class="dot green"></span>Semantic</td>
+          <td>What do I know?</td>
+          <td>Facts, user preferences, domain knowledge</td>
+        </tr>
+        <tr>
+          <td><span class="dot purple"></span>Episodic</td>
+          <td>What happened before?</td>
+          <td>Past events, prior interactions, outcomes</td>
+        </tr>
+        <tr>
+          <td><span class="dot amber"></span>Procedural</td>
+          <td>How do I do it?</td>
+          <td>Workflows, SOPs, skills, prompt templates</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 6. Key Insight: Storage vs Concept -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="section highlight">
+    <h2><span class="icon">💡</span>Type vs Storage</h2>
+    <p>
+      The distinction between semantic, episodic, and procedural memory is primarily <strong>conceptual</strong>, not storage-based.
+      In production systems, all three may coexist in the same database.
+    </p>
+
+    <div class="formula">Semantic   → Facts     (what I know)
+Episodic   → Events    (what happened)
+Procedural → Workflows (how to do it)</div>
+
+    <div class="note-box" style="margin-top:0.75rem">
+      The difference is not <em>where</em> they are stored, but <em>what type of information they represent</em>.
+      A vector database can hold all three types. A SQL table can hold all three types. Type is about
+      semantics - not infrastructure.
+    </div>
+
+    <div class="grid-3" style="margin-top:1rem">
+      <div class="card green">
+        <h3>Vector Database</h3>
+        <p>Can store semantic facts, episodic event summaries, and procedural steps - all searchable by embedding similarity.</p>
+        <div style="margin-top:0.5rem">
+          <span class="tag green">Pinecone</span><span class="tag green">Chroma</span><span class="tag green">Weaviate</span>
+        </div>
+      </div>
+      <div class="card blue">
+        <h3>SQL / Relational</h3>
+        <p>Structured records filterable by date, category, user ID - good for all three types with metadata-driven retrieval.</p>
+        <div style="margin-top:0.5rem">
+          <span class="tag blue">PostgreSQL</span><span class="tag blue">SQLite</span>
+        </div>
+      </div>
+      <div class="card amber">
+        <h3>Key-Value / Graph</h3>
+        <p>KV for exact fact lookups; graphs for relational semantic knowledge where entity connections matter.</p>
+        <div style="margin-top:0.5rem">
+          <span class="tag amber">Redis</span><span class="tag amber">Neo4j</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+</body></html>

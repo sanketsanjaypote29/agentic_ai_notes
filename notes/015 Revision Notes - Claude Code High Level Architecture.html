@@ -1,0 +1,201 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style>
+@charset "utf-8";
+
+* { box-sizing: border-box; margin: 0px; padding: 0px; }
+
+body { background: rgb(13, 13, 13); color: rgb(224, 224, 224); font-family: "Segoe UI", system-ui, sans-serif; line-height: 1.7; font-size: 14px; }
+
+.page { max-width: 860px; margin: 0px auto; padding: 3rem 2rem; }
+
+h1 { font-size: 24px; font-weight: 500; color: rgb(255, 255, 255); border-bottom: 1px solid rgb(42, 42, 42); padding-bottom: 0.75rem; margin-bottom: 2.5rem; letter-spacing: 0.02em; }
+
+h2 { font-size: 11px; font-weight: 500; color: rgb(167, 139, 250); margin: 2.5rem 0px 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; }
+
+h3 { font-size: 15px; font-weight: 500; color: rgb(224, 224, 224); margin: 1.5rem 0px 0.5rem; }
+
+p { color: rgb(176, 176, 176); margin-bottom: 0.75rem; font-size: 14px; }
+
+code { background: rgb(30, 30, 30); color: rgb(125, 211, 252); padding: 2px 6px; border-radius: 4px; font-size: 12px; font-family: "Fira Code", "Cascadia Code", monospace; }
+
+.section { border-left: 2px solid rgb(42, 42, 42); padding-left: 1.25rem; margin-bottom: 2rem; transition: border-color 0.2s; }
+
+.section:hover { border-left-color: rgb(124, 58, 237); }
+
+.alt { background: rgb(20, 20, 20); border: 1px solid rgb(31, 31, 31); border-radius: 8px; padding: 0.875rem 1rem; margin: 0.5rem 0px; }
+
+.alt-label { font-size: 11px; color: rgb(107, 114, 128); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.25rem; font-family: monospace; }
+
+.alt-text { color: rgb(156, 163, 175); font-size: 13px; }
+
+.decision { background: rgb(15, 23, 42); border: 1px solid rgb(30, 58, 95); border-radius: 8px; padding: 0.875rem 1rem; margin: 0.5rem 0px; }
+
+.decision-label { font-size: 11px; color: rgb(59, 130, 246); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.25rem; font-family: monospace; }
+
+.decision-text { color: rgb(147, 197, 253); font-size: 13px; }
+
+.callout { background: rgb(17, 17, 17); border-left: 3px solid rgb(124, 58, 237); padding: 0.75rem 1rem; margin: 1rem 0px; border-radius: 0px 6px 6px 0px; }
+
+.callout p { margin: 0px; font-size: 13px; color: rgb(196, 181, 253); }
+
+.layer { display: flex; gap: 1rem; margin: 0.5rem 0px; align-items: flex-start; }
+
+.layer-tag { background: rgb(30, 30, 46); border: 1px solid rgb(59, 7, 100); color: rgb(167, 139, 250); font-size: 11px; padding: 3px 10px; border-radius: 4px; white-space: nowrap; font-family: monospace; min-width: 120px; text-align: center; margin-top: 2px; }
+
+.layer-desc { color: rgb(156, 163, 175); font-size: 13px; }
+
+.layer-arrow { margin: 0.25rem 0px 0.25rem 58px; color: rgb(42, 42, 42); font-size: 12px; }
+
+.tag { display: inline-block; background: rgb(26, 26, 26); border: 1px solid rgb(51, 51, 51); color: rgb(209, 213, 219); font-size: 11px; padding: 2px 8px; border-radius: 4px; margin: 2px; font-family: monospace; }
+
+.file { color: rgb(52, 211, 153); font-size: 12px; font-family: monospace; }
+
+.arrow { color: rgb(75, 85, 99); margin: 0px 4px; }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin: 0.75rem 0px; }
+
+hr { border-width: 1px medium medium; border-style: solid none none; border-color: rgb(31, 31, 31) currentcolor currentcolor; border-image: initial; margin: 2.5rem 0px; }
+
+@media (max-width: 600px) {
+  .grid-2 { grid-template-columns: 1fr; }
+}
+
+</style>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Educosys Claude - Architecture Notes</title>
+
+
+<style>
+/* Reset & iframe compatibility */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto !important;
+}
+</style>
+
+</head>
+<body>
+<div class="page">
+
+  <h1>Educosys Claude - Architecture &amp; Design Notes</h1>
+
+  <!-- ── LAYERED ARCHITECTURE ── -->
+  <h2>Layered Architecture</h2>
+  <div class="section">
+    <p>The codebase is split into discrete layers. Each layer has one job. No layer reaches across to another layer's internals.</p>
+    <div style="margin: 1rem 0;">
+
+      <div class="layer">
+        <span class="layer-tag">CLI / REPL</span>
+        <span class="layer-desc">The entry point. Responsible for talking to the user - receiving input, displaying output, managing commands. Nothing below this layer knows about the user.</span>
+      </div>
+      <div class="layer-arrow">↓</div>
+
+      <div class="layer">
+        <span class="layer-tag">Agent</span>
+        <span class="layer-desc">Responsible for reasoning and decision-making. Takes a question, decides what to do, calls tools if needed, returns an answer. The "brain" of the system.</span>
+      </div>
+      <div class="layer-arrow">↓</div>
+
+      <div class="layer">
+        <span class="layer-tag">Tools</span>
+        <span class="layer-desc">Responsible for giving the agent hands. Each tool is one capability - search the codebase, read a file, run a command. The agent decides when to use them.</span>
+      </div>
+      <div class="layer-arrow">↓</div>
+
+      <div class="layer">
+        <span class="layer-tag">Skills</span>
+        <span class="layer-desc">Responsible for higher-level composed capabilities. A skill combines multiple tools and agent calls into one reusable workflow - e.g. "explain this PR" or "review this file". Skills are what end-users think of as features.</span>
+      </div>
+      <div class="layer-arrow">↓</div>
+
+      <div class="layer">
+        <span class="layer-tag">MCP</span>
+        <span class="layer-desc">Responsible for external integrations. MCP servers expose third-party systems (GitHub, Jira, Slack) as tools the agent can call. Keeps integration logic separate from core agent logic.</span>
+      </div>
+      <div class="layer-arrow">↓</div>
+
+      <div class="layer">
+        <span class="layer-tag">Context / RAG</span>
+        <span class="layer-desc">Responsible for knowledge retrieval. Knows how to index a codebase and find relevant pieces of it given a query. Completely unaware of the agent or tools above it.</span>
+      </div>
+      <div class="layer-arrow">↓</div>
+
+      <div class="layer">
+        <span class="layer-tag">Memory</span>
+        <span class="layer-desc">Responsible for remembering. Short-term keeps the current conversation. Long-term keeps facts, summaries, and behavioral patterns across sessions.</span>
+      </div>
+      <div class="layer-arrow">↓</div>
+
+      <div class="layer">
+        <span class="layer-tag">Safety</span>
+        <span class="layer-desc">Responsible for guardrails. Validates inputs before they reach the agent and outputs before they reach the user. Blocks harmful content, enforces scope, prevents prompt injection. Nothing leaves the system without passing through here.</span>
+      </div>
+      <div class="layer-arrow">↓</div>
+
+      <div class="layer">
+        <span class="layer-tag">Freshness</span>
+        <span class="layer-desc">Responsible for keeping the index up to date. Detects when the codebase has changed and triggers re-indexing. Without this, the RAG layer answers questions about stale code.</span>
+      </div>
+      <div class="layer-arrow">↓</div>
+
+      <div class="layer">
+        <span class="layer-tag">LLM</span>
+        <span class="layer-desc">Responsible for model access. Decides which LLM and embedder to instantiate. Everything above this layer is model-agnostic.</span>
+      </div>
+      <div class="layer-arrow">↓</div>
+
+      <div class="layer">
+        <span class="layer-tag">Config</span>
+        <span class="layer-desc">Responsible for application-wide settings. A single source of truth for how the system is configured - providers, modes, limits. Every layer reads from it, nothing writes to it at runtime.</span>
+      </div>
+      <div class="layer-arrow">↓</div>
+
+      <div class="layer">
+        <span class="layer-tag">Observability</span>
+        <span class="layer-desc">Responsible for visibility. Structured logging so you can see exactly what the system is doing at runtime - which layer, which operation, which outcome.</span>
+      </div>
+      <div class="layer-arrow">↓</div>
+
+      <div class="layer">
+        <span class="layer-tag">Eval</span>
+        <span class="layer-desc">Responsible for measuring quality. Shared golden datasets test every layer independently - retrieval (Recall@k, MRR), context (precision, recall), generation (faithfulness, relevancy via RAGAS), and agent (task success rate, step accuracy).</span>
+      </div>
+
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- ── PACKAGE & DEV TOOLING ── -->
+  <h2>Package &amp; Dev Tooling</h2>
+  <div class="section">
+    <h3>Poetry vs pipx</h3>
+    <p>We use <code>poetry install</code> for development - it installs the package in editable mode so code changes reflect immediately without reinstall. <code>pipx</code> is for distributing a finished CLI tool to end-users.</p>
+    <div class="decision">
+      <div class="decision-label">Decision</div>
+      <div class="decision-text">Use <code>poetry run educosys_claude</code> during development. Use <code>pipx</code> to test the installed package from another directory.</div>
+    </div>
+
+    <h3>config.yaml vs .env - what goes where and why</h3>
+    <p><code>config.yaml</code> and <code>.env</code> serve completely different purposes and should never be mixed.</p>
+    <div class="decision">
+      <div class="decision-label">config.yaml - behaviour config</div>
+      <div class="decision-text">Controls how the app behaves: which LLM provider, which vector store, model names, chunk sizes, collection names, memory limits. Safe to commit to git. Changes here switch features, not credentials.</div>
+    </div>
+    <div class="decision">
+      <div class="decision-label">.env - secrets</div>
+      <div class="decision-text">API keys, passwords, URLs that change per environment (dev vs prod). Never committed to git - always in <code>.gitignore</code>. Read via <code>os.getenv()</code> at runtime, not loaded into the config dict.</div>
+    </div>
+    <div class="alt">
+      <div class="alt-label">Why separate?</div>
+      <div class="alt-text">A teammate can clone the repo, see exactly how the app is configured in <code>config.yaml</code>, and supply their own keys in <code>.env</code>. If secrets lived in <code>config.yaml</code>, one accidental commit leaks every key. If behaviour config lived in <code>.env</code>, there's no visible record of what settings the app runs with.</div>
+    </div>
+  </div>
+
+  <hr>
+</div></body></html>

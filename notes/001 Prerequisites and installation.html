@@ -1,0 +1,1057 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style>
+@charset "utf-8";
+
+*, ::before, ::after { box-sizing: border-box; margin: 0px; padding: 0px; }
+
+:root { --bg: #0D1117; --surface: #161B22; --surface2: #1E2733; --border: #30363D; --blue: #2563EB; --blue-light: #3B82F6; --cyan: #06B6D4; --green: #10B981; --amber: #F59E0B; --red: #EF4444; --purple: #8B5CF6; --text: #E2E8F0; --text-muted: #8B9DB0; --text-dim: #4B5563; --white: #FFFFFF; --card-bg: #1A2130; --code-bg: #0D1B2A; }
+
+html { scroll-behavior: smooth; }
+
+body { font-family: "Segoe UI", system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; font-size: 16px; }
+
+.topbar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; gap: 12px; position: sticky; top: 0px; z-index: 100; }
+
+.topbar-accent { width: 4px; height: 24px; background: var(--green); border-radius: 2px; }
+
+.topbar-title { font-size: 13px; font-weight: 700; color: var(--white); letter-spacing: 0.04em; text-transform: uppercase; }
+
+.topbar-sub { font-size: 12px; color: var(--text-muted); margin-left: auto; }
+
+.topbar-chip { background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); color: var(--green); font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.04em; }
+
+.hero { background: linear-gradient(135deg, rgb(13, 17, 23) 0%, rgb(11, 31, 20) 55%, rgb(13, 17, 23) 100%); border-bottom: 1px solid var(--border); padding: 60px 0px 48px; position: relative; overflow: hidden; }
+
+.hero::before { content: ""; position: absolute; inset: 0px; background: radial-gradient(500px 350px at 65% 40%, rgba(16, 185, 129, 0.07) 0%, transparent 70%), radial-gradient(300px 200px at 15% 70%, rgba(6, 182, 212, 0.04) 0%, transparent 70%); pointer-events: none; }
+
+.hero-inner { max-width: 960px; margin: 0px auto; padding: 0px 24px; position: relative; }
+
+.hero-tag { display: inline-flex; align-items: center; gap: 8px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); color: var(--green); font-size: 12px; font-weight: 600; padding: 5px 14px; border-radius: 20px; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 20px; }
+
+.hero-tag::before { content: "●"; font-size: 8px; }
+
+.hero h1 { font-size: 40px; font-weight: 800; line-height: 1.1; color: var(--white); margin-bottom: 8px; }
+
+.hero h1 span { color: var(--green); }
+
+.hero-subtitle { font-size: 16px; color: var(--text-muted); margin-bottom: 32px; max-width: 540px; }
+
+.hero-meta { display: flex; gap: 12px; flex-wrap: wrap; }
+
+.hero-meta-item { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 16px; }
+
+.hero-meta-item .label { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 3px; }
+
+.hero-meta-item .value { font-size: 13px; font-weight: 600; color: var(--white); }
+
+.page-wrap { max-width: 960px; margin: 0px auto; padding: 0px 24px 80px; }
+
+.toc { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 24px 28px; margin: 44px 0px; }
+
+.toc h3 { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 14px; }
+
+.toc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0px; }
+
+@media (max-width: 600px) {
+  .toc-grid { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 28px; }
+}
+
+.toc-item { display: flex; align-items: center; gap: 10px; padding: 9px 4px; border-bottom: 1px solid var(--border); text-decoration: none; color: var(--text); font-size: 13.5px; transition: color 0.15s; }
+
+.toc-item:hover { color: var(--green); }
+
+.toc-num { font-size: 11px; font-weight: 700; color: var(--text-dim); min-width: 22px; }
+
+.toc-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+.section { margin: 52px 0px; }
+
+.section-header { display: flex; align-items: flex-start; gap: 14px; background: var(--surface2); border-top-color: ; border-top-style: ; border-top-width: ; border-right-color: ; border-right-style: ; border-right-width: ; border-bottom-color: ; border-bottom-style: ; border-bottom-width: ; border-image-source: ; border-image-slice: ; border-image-width: ; border-image-outset: ; border-image-repeat: ; border-left: 4px solid var(--green); border-radius: 10px; padding: 18px 22px; margin-bottom: 28px; }
+
+.section-header.blue { border-left-color: var(--blue); }
+
+.section-header.amber { border-left-color: var(--amber); }
+
+.section-header.purple { border-left-color: var(--purple); }
+
+.section-header.cyan { border-left-color: var(--cyan); }
+
+.section-header.red { border-left-color: var(--red); }
+
+.section-num { font-size: 12px; font-weight: 800; color: var(--text-dim); background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 3px 9px; flex-shrink: 0; margin-top: 3px; }
+
+.section-header-text h2 { font-size: 19px; font-weight: 700; color: var(--white); margin-bottom: 3px; }
+
+.section-header-text p { font-size: 13px; color: var(--text-muted); }
+
+.lead { font-size: 15.5px; color: var(--text-muted); line-height: 1.8; margin-bottom: 22px; }
+
+h3.sub { font-size: 15px; font-weight: 700; color: var(--white); margin: 26px 0px 10px; }
+
+p { margin-bottom: 14px; color: var(--text); font-size: 15px; }
+
+strong { color: var(--white); }
+
+ol.steps-list { padding-left: 22px; margin: 10px 0px 18px; }
+
+ol.steps-list li { padding: 5px 0px; font-size: 14.5px; color: var(--text); }
+
+ul.prose { list-style: none; margin: 10px 0px 18px; padding: 0px; }
+
+ul.prose li { padding: 7px 0px 7px 18px; position: relative; font-size: 14.5px; border-bottom: 1px solid var(--border); color: var(--text); }
+
+ul.prose li:last-child { border-bottom-width: medium; border-bottom-style: none; border-bottom-color: currentcolor; }
+
+ul.prose li::before { content: "•"; position: absolute; left: 0px; color: var(--green); font-weight: 700; }
+
+.code-block { background: var(--code-bg); border: 1px solid var(--border); border-radius: 10px; margin: 14px 0px; overflow: hidden; font-family: "Cascadia Code", "Fira Code", "Courier New", monospace; }
+
+.code-header { background: var(--surface2); border-bottom: 1px solid var(--border); padding: 9px 16px; display: flex; align-items: center; gap: 10px; }
+
+.code-lang { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+
+.code-label { font-size: 12px; color: var(--text-muted); }
+
+.copy-btn { margin-left: auto; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); color: var(--green); font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 6px; cursor: pointer; transition: background 0.15s; font-family: inherit; }
+
+.copy-btn:hover { background: rgba(16, 185, 129, 0.2); }
+
+.copy-btn.copied { color: var(--cyan); border-color: rgba(6, 182, 212, 0.4); background: rgba(6, 182, 212, 0.1); }
+
+pre { padding: 18px 20px; overflow-x: auto; font-size: 13px; line-height: 1.7; color: rgb(226, 232, 240); }
+
+pre .kw { color: rgb(192, 132, 252); }
+
+pre .fn { color: rgb(96, 165, 250); }
+
+pre .str { color: rgb(134, 239, 172); }
+
+pre .cm { color: rgb(75, 85, 99); font-style: italic; }
+
+pre .var { color: rgb(253, 230, 138); }
+
+pre .num { color: rgb(251, 146, 60); }
+
+pre .imp { color: rgb(244, 114, 182); }
+
+pre .dec { color: rgb(52, 211, 153); }
+
+pre .cls { color: rgb(56, 189, 248); }
+
+.os-tabs { display: flex; gap: 0px; border-bottom: 1px solid var(--border); margin: 14px 0px 0px; }
+
+.os-tab { padding: 8px 18px; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--text-muted); border-bottom: 2px solid transparent; transition: color 0.15s; user-select: none; }
+
+.os-tab.active { color: var(--green); border-bottom-color: var(--green); }
+
+.os-panel { display: none; padding-top: 4px; }
+
+.os-panel.active { display: block; }
+
+.callout { border-radius: 10px; padding: 16px 20px; margin: 16px 0px; border-left: 4px solid; font-size: 14px; line-height: 1.7; }
+
+.callout-title { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 7px; }
+
+.callout.green { background: rgba(16, 185, 129, 0.07); border-color: var(--green); }
+
+.callout.green .callout-title { color: var(--green); }
+
+.callout.blue { background: rgba(37, 99, 235, 0.07); border-color: var(--blue); }
+
+.callout.blue .callout-title { color: var(--blue-light); }
+
+.callout.amber { background: rgba(245, 158, 11, 0.07); border-color: var(--amber); }
+
+.callout.amber .callout-title { color: var(--amber); }
+
+.callout.red { background: rgba(239, 68, 68, 0.07); border-color: var(--red); }
+
+.callout.red .callout-title { color: var(--red); }
+
+.callout.purple { background: rgba(139, 92, 246, 0.07); border-color: var(--purple); }
+
+.callout.purple .callout-title { color: var(--purple); }
+
+.table-wrap { overflow-x: auto; margin: 16px 0px; border-radius: 10px; border: 1px solid var(--border); }
+
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+
+thead th { background: var(--surface2); color: var(--white); font-weight: 700; padding: 11px 14px; text-align: left; border-bottom: 1px solid var(--border); font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; }
+
+tbody td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; color: var(--text); font-size: 14px; }
+
+tbody tr:last-child td { border-bottom-width: medium; border-bottom-style: none; border-bottom-color: currentcolor; }
+
+tbody tr:nth-child(2n) td { background: rgba(255, 255, 255, 0.02); }
+
+.check { color: var(--green); font-weight: 700; }
+
+.cross { color: var(--red); }
+
+.file-tree { background: var(--code-bg); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; font-family: "Cascadia Code", "Fira Code", monospace; font-size: 13px; line-height: 1.9; color: var(--text); margin: 14px 0px; }
+
+.file-tree .dir { color: rgb(96, 165, 250); }
+
+.file-tree .note { color: var(--text-muted); font-style: italic; }
+
+.output-block { background: rgb(8, 14, 24); border: 1px dashed var(--border); border-radius: 8px; padding: 14px 18px; font-family: "Cascadia Code", monospace; font-size: 12.5px; color: rgb(52, 211, 153); line-height: 1.8; margin: 10px 0px; }
+
+.output-block .dim { color: var(--text-muted); }
+
+.output-block .hi { color: var(--cyan); }
+
+.check-item { display: flex; align-items: flex-start; gap: 12px; padding: 11px 14px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 6px; }
+
+.check-item .icon { font-size: 16px; flex-shrink: 0; margin-top: 2px; }
+
+.check-item .text { font-size: 14px; color: var(--text); }
+
+.check-item .text small { display: block; color: var(--text-muted); font-size: 12px; margin-top: 2px; }
+
+.divider { height: 1px; background: var(--border); margin: 48px 0px; }
+
+.page-footer { background: var(--surface); border-top: 1px solid var(--border); padding: 24px; text-align: center; font-size: 13px; color: var(--text-muted); margin-top: 80px; }
+
+.page-footer strong { color: var(--text); }
+
+code { background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; padding: 2px 7px; font-family: "Cascadia Code", monospace; font-size: 13px; color: var(--cyan); }
+
+</style>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prerequisites &amp; Setup — Agentic AI System Design</title>
+
+
+<style>
+/* Reset & iframe compatibility */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto !important;
+}
+</style>
+
+</head>
+<body>
+
+<!-- ── Topbar ── -->
+<div class="topbar">
+  <div class="topbar-accent"></div>
+  <div class="topbar-title">Agentic AI System Design</div>
+  <div class="topbar-chip">Pre-Class Setup</div>
+  <div class="topbar-sub">Prerequisites &amp; Environment Setup</div>
+</div>
+
+<!-- ── Hero ── -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">Before the First Class</div>
+    <h1>Prerequisites &amp;<br><span>Environment Setup</span></h1>
+    <p class="hero-subtitle">Get your machine ready before Day 1. Follow every step in order, run the final demo, and come to class with a working environment.</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <div class="label">Estimated Time</div>
+        <div class="value">~45 minutes</div>
+      </div>
+      <div class="hero-meta-item">
+        <div class="label">Python</div>
+        <div class="value">3.11 or 3.12</div>
+      </div>
+      <div class="hero-meta-item">
+        <div class="label">Package Manager</div>
+        <div class="value">Poetry 2.4+</div>
+      </div>
+      <div class="hero-meta-item">
+        <div class="label">LangChain</div>
+        <div class="value">v1.3+ (latest)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="page-wrap">
+
+<!-- ── TOC ── -->
+<div class="toc">
+  <h3>Steps</h3>
+  <div class="toc-grid">
+    <a class="toc-item" href="#s1"><span class="toc-num">01</span><span class="toc-dot" style="background:var(--green)"></span>Install Python</a>
+    <a class="toc-item" href="#s2"><span class="toc-num">02</span><span class="toc-dot" style="background:var(--blue)"></span>Install an IDE</a>
+    <a class="toc-item" href="#s3"><span class="toc-num">03</span><span class="toc-dot" style="background:var(--amber)"></span>Why Poetry? Install Poetry</a>
+    <a class="toc-item" href="#s4"><span class="toc-num">04</span><span class="toc-dot" style="background:var(--purple)"></span>Create Project &amp; Virtual Env</a>
+    <a class="toc-item" href="#s5"><span class="toc-num">05</span><span class="toc-dot" style="background:var(--cyan)"></span>Install LangChain</a>
+    <a class="toc-item" href="#s6"><span class="toc-num">06</span><span class="toc-dot" style="background:var(--red)"></span>Set Up OpenAI API Key</a>
+    <a class="toc-item" href="#s7"><span class="toc-num">07</span><span class="toc-dot" style="background:var(--text-muted)"></span>Set Up Git &amp; GitHub</a>
+    <a class="toc-item" href="#s8"><span class="toc-num">08</span><span class="toc-dot" style="background:var(--green)"></span>Verify — Run the Demo</a>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     01 — Python
+     ════════════════════════════════════════════════════ -->
+<div class="section" id="s1">
+  <div class="section-header">
+    <div class="section-num">01</div>
+    <div class="section-header-text">
+      <h2>Install Python 3.11 or 3.12</h2>
+      <p>The runtime that everything else depends on.</p>
+    </div>
+  </div>
+
+  <p>Use <strong>Python 3.11 or 3.12</strong>. Do not use 3.9 or 3.10 — some libraries we use require 3.11+. Do not use 3.13+ yet as some dependencies are still catching up.</p>
+
+  <div class="os-tabs" id="py-tabs">
+    <div class="os-tab active">macOS</div>
+    <div class="os-tab">Windows</div>
+    <div class="os-tab">Linux</div>
+  </div>
+
+  <div id="py-mac" class="os-panel active">
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">bash</span>
+        <span class="code-label">macOS — using Homebrew</span>
+        <button class="copy-btn">Copy</button>
+      </div>
+      <pre><span class="cm"># Install Homebrew if you don't already have it</span>
+/bin/bash -c <span class="str">"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</span>
+
+<span class="cm"># Install Python 3.12</span>
+brew install python@3.12
+
+<span class="cm"># Verify</span>
+python3 --version
+<span class="cm"># → Python 3.12.x</span></pre>
+    </div>
+    <div class="callout amber">
+      <div class="callout-title">macOS Note</div>
+      macOS ships with an older Python. Always use <code>python3</code> in your terminal, not <code>python</code>.
+    </div>
+  </div>
+
+  <div id="py-win" class="os-panel">
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">powershell</span>
+        <span class="code-label">Windows</span>
+        <button class="copy-btn">Copy</button>
+      </div>
+      <pre><span class="cm"># Option 1 — Installer (recommended)</span>
+<span class="cm"># Visit: https://www.python.org/downloads/</span>
+<span class="cm"># Download Python 3.12.x → Run the installer</span>
+<span class="cm"># ✅ Check "Add Python to PATH" during install — important!</span>
+
+<span class="cm"># Option 2 — winget</span>
+winget install Python.Python.3.12
+
+<span class="cm"># Open a NEW terminal, then verify</span>
+python --version
+<span class="cm"># → Python 3.12.x</span></pre>
+    </div>
+    <div class="callout amber">
+      <div class="callout-title">Windows Note</div>
+      Always open a <strong>new terminal</strong> after installing Python so PATH changes take effect.
+    </div>
+  </div>
+
+  <div id="py-linux" class="os-panel">
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">bash</span>
+        <span class="code-label">Ubuntu / Debian</span>
+        <button class="copy-btn">Copy</button>
+      </div>
+      <pre>sudo apt update
+sudo apt install python3.12 python3.12-venv python3.12-dev python3-pip -y
+
+python3.12 --version
+<span class="cm"># → Python 3.12.x</span></pre>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ════════════════════════════════════════════════════
+     02 — IDE
+     ════════════════════════════════════════════════════ -->
+<div class="section" id="s2">
+  <div class="section-header blue">
+    <div class="section-num">02</div>
+    <div class="section-header-text">
+      <h2>Install an IDE</h2>
+      <p>Cursor is recommended. VS Code is a solid free alternative.</p>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Feature</th><th>Cursor</th><th>VS Code</th></tr></thead>
+      <tbody>
+        <tr><td>AI code completion</td><td class="check">✓ Built-in, context-aware</td><td><span style="color:var(--text-muted)">Via GitHub Copilot extension</span></td></tr>
+        <tr><td>Chat with codebase</td><td class="check">✓ Native (Cmd/Ctrl + L)</td><td><span style="color:var(--text-muted)">Via extension</span></td></tr>
+        <tr><td>All VS Code extensions</td><td class="check">✓ Fully compatible</td><td class="check">✓ Full ecosystem</td></tr>
+        <tr><td>Cost</td><td><span style="color:var(--text-muted)">Free trial, then paid</span></td><td class="check">✓ Completely free</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="sub">Install Cursor (Recommended)</h3>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">text</span><span class="code-label">Cursor</span></div>
+    <pre>1. Go to https://www.cursor.com
+2. Click "Download" for your OS
+3. Run the installer and launch Cursor
+4. Sign in with GitHub</pre>
+  </div>
+
+  <h3 class="sub">OR: Install VS Code</h3>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">text</span><span class="code-label">VS Code</span></div>
+    <pre>1. Go to https://code.visualstudio.com
+2. Download and install for your OS
+3. Open VS Code → Extensions panel → install "Python" (by Microsoft)
+4. Install "Pylance" for type checking support</pre>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ════════════════════════════════════════════════════
+     03 — Why Poetry + Install
+     ════════════════════════════════════════════════════ -->
+<div class="section" id="s3">
+  <div class="section-header amber">
+    <div class="section-num">03</div>
+    <div class="section-header-text">
+      <h2>Why Poetry? And How to Install It</h2>
+      <p>We use Poetry instead of pip. Here is exactly why — and how to get it running.</p>
+    </div>
+  </div>
+
+  <h3 class="sub">Why Not Just Use pip?</h3>
+  <p>pip works fine for simple scripts. For any real project — especially AI projects with complex, interacting dependencies — pip creates problems that Poetry solves cleanly.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Problem</th><th>With pip</th><th>With Poetry</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Reproducible installs</strong></td>
+          <td class="cross">✗ <code>requirements.txt</code> has no lock. Versions drift between machines and over time.</td>
+          <td class="check">✓ <code>poetry.lock</code> pins every dependency to the exact version — forever reproducible.</td>
+        </tr>
+        <tr>
+          <td><strong>Virtual environments</strong></td>
+          <td class="cross">✗ You create, activate, and manage venvs manually every time.</td>
+          <td class="check">✓ Poetry creates and manages a project venv automatically.</td>
+        </tr>
+        <tr>
+          <td><strong>Dependency conflicts</strong></td>
+          <td class="cross">✗ Conflicts are discovered at runtime, often with cryptic errors.</td>
+          <td class="check">✓ Poetry's resolver catches conflicts at add-time before anything breaks.</td>
+        </tr>
+        <tr>
+          <td><strong>Dev vs prod deps</strong></td>
+          <td class="cross">✗ Requires managing multiple <code>requirements-*.txt</code> files manually.</td>
+          <td class="check">✓ Built-in groups: <code>[dev]</code>, <code>[test]</code> — clean, explicit separation.</td>
+        </tr>
+        <tr>
+          <td><strong>Project metadata</strong></td>
+          <td class="cross">✗ Spread across <code>setup.py</code>, <code>setup.cfg</code>, <code>MANIFEST.in</code>.</td>
+          <td class="check">✓ Everything in one <code>pyproject.toml</code> — the modern Python standard.</td>
+        </tr>
+        <tr>
+          <td><strong>Team collaboration</strong></td>
+          <td class="cross">✗ "Works on my machine" is a real and common problem.</td>
+          <td class="check">✓ Commit <code>poetry.lock</code> → every teammate gets an identical environment.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>AI projects are especially dependency-fragile. LangChain, LangGraph, OpenAI SDK, Pydantic, and their transitive dependencies interact in complex ways. A single version mismatch can silently break tool calling or agent execution in ways that are very hard to debug. Poetry's lockfile eliminates this entire class of problem.</p>
+
+  <h3 class="sub">Install Poetry</h3>
+
+  <div class="callout red">
+    <div class="callout-title">Important</div>
+    Do <strong>not</strong> install Poetry with <code>pip install poetry</code> inside a project. Install it globally using pipx or the official installer, so it stays isolated from the projects it manages.
+  </div>
+
+  <div class="os-tabs" id="poetry-tabs">
+    <div class="os-tab active">macOS</div>
+    <div class="os-tab">Windows</div>
+    <div class="os-tab">Linux</div>
+  </div>
+
+  <div id="poetry-mac" class="os-panel active">
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">bash</span>
+        <span class="code-label">macOS — via pipx (recommended)</span>
+        <button class="copy-btn">Copy</button>
+      </div>
+      <pre><span class="cm"># Install pipx — the right tool for installing Python CLI apps globally</span>
+brew install pipx
+pipx ensurepath
+
+<span class="cm"># Install Poetry</span>
+pipx install poetry
+
+<span class="cm"># Verify</span>
+poetry --version
+<span class="cm"># → Poetry (version 2.4.1)</span>
+
+<span class="cm"># Configure Poetry to create the venv inside the project folder (makes IDE integration easier)</span>
+poetry config virtualenvs.in-project <span class="kw">true</span></pre>
+    </div>
+  </div>
+
+  <div id="poetry-win" class="os-panel">
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">powershell</span>
+        <span class="code-label">Windows — official installer (PowerShell)</span>
+        <button class="copy-btn">Copy</button>
+      </div>
+      <pre><span class="cm"># Run the official installer</span>
+(Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | py -
+
+<span class="cm"># The installer prints the PATH to add. It looks like:</span>
+<span class="cm"># %APPDATA%\Python\Scripts</span>
+<span class="cm"># Add it: Start → Search "Environment Variables" → System Variables → PATH → Edit → Add it</span>
+
+<span class="cm"># Open a NEW terminal, then verify</span>
+poetry --version
+<span class="cm"># → Poetry (version 2.4.1)</span>
+
+poetry config virtualenvs.in-project true</pre>
+    </div>
+    <div class="callout amber">
+      <div class="callout-title">Windows Note</div>
+      If <code>py</code> is not found, replace it with <code>python</code>. Always open a fresh terminal after installation.
+    </div>
+  </div>
+
+  <div id="poetry-linux" class="os-panel">
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">bash</span>
+        <span class="code-label">Linux — official installer</span>
+        <button class="copy-btn">Copy</button>
+      </div>
+      <pre><span class="cm"># Official installer</span>
+curl -sSL https://install.python-poetry.org | python3 -
+
+<span class="cm"># Add to PATH — paste into ~/.bashrc or ~/.zshrc</span>
+<span class="kw">export</span> PATH=<span class="str">"$HOME/.local/bin:$PATH"</span>
+
+<span class="cm"># Reload your shell</span>
+source ~/.bashrc
+
+<span class="cm"># Verify</span>
+poetry --version
+<span class="cm"># → Poetry (version 2.4.1)</span>
+
+poetry config virtualenvs.in-project <span class="kw">true</span></pre>
+    </div>
+  </div>
+
+  <div class="callout green" style="margin-top:16px">
+    <div class="callout-title">Key Poetry Commands to Remember</div>
+    <code>poetry add &lt;package&gt;</code> — add a dependency and update the lockfile<br>
+    <code>poetry install</code> — install all deps from lockfile (reproducible)<br>
+    <code>poetry run python script.py</code> — run a script inside the managed venv<br>
+    <code>poetry shell</code> — activate the venv in your current terminal session
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ════════════════════════════════════════════════════
+     04 — Create Project + Virtual Env
+     ════════════════════════════════════════════════════ -->
+<div class="section" id="s4">
+  <div class="section-header purple">
+    <div class="section-num">04</div>
+    <div class="section-header-text">
+      <h2>Create the Course Project &amp; Virtual Environment</h2>
+      <p>A Poetry project automatically sets up and manages the virtual environment for you.</p>
+    </div>
+  </div>
+
+  <p>Create a project folder for this course. We call it <code>agentic-ai-course</code>.</p>
+
+  <div class="code-block">
+    <div class="code-header">
+      <span class="code-lang">bash</span>
+      <span class="code-label">Create project with Poetry</span>
+      <button class="copy-btn">Copy</button>
+    </div>
+    <pre><span class="cm"># Go to wherever you keep your projects</span>
+cd ~/projects          <span class="cm"># macOS / Linux</span>
+<span class="cm"># cd C:\Users\YourName\projects   ← Windows</span>
+
+<span class="cm"># Create the project</span>
+poetry new agentic-ai-course
+cd agentic-ai-course
+
+<span class="cm"># Open in your IDE</span>
+cursor .    <span class="cm"># or: code .  for VS Code</span></pre>
+  </div>
+
+  <p>Poetry creates this structure:</p>
+
+  <div class="file-tree">
+    <span class="dir">agentic-ai-course/</span><br>
+    ├── <span class="dir">agentic_ai_course/</span>   <span class="note">← your Python package (we'll add scripts here)</span><br>
+    │&nbsp;&nbsp;&nbsp;└── __init__.py<br>
+    ├── <span class="dir">tests/</span><br>
+    │&nbsp;&nbsp;&nbsp;└── __init__.py<br>
+    ├── pyproject.toml       <span class="note">← project config &amp; dependencies</span><br>
+    └── README.md
+  </div>
+
+  <h3 class="sub">Understanding the Virtual Environment</h3>
+  <p>Because you ran <code>poetry config virtualenvs.in-project true</code> in the previous step, Poetry will create the virtual environment inside the project folder as <code>.venv/</code> the first time you run <code>poetry install</code>. This makes it easy for your IDE to detect it automatically.</p>
+
+  <div class="code-block">
+    <div class="code-header">
+      <span class="code-lang">bash</span>
+      <span class="code-label">Verify the virtual environment</span>
+      <button class="copy-btn">Copy</button>
+    </div>
+    <pre><span class="cm"># Install the project (creates the .venv/ folder)</span>
+poetry install
+
+<span class="cm"># Check where the venv lives</span>
+poetry env info
+
+<span class="cm"># Activate the venv in your terminal (optional — poetry run works without this)</span>
+poetry shell
+
+<span class="cm"># You should now see (.venv) at the start of your prompt</span>
+<span class="cm"># Verify Python inside the venv</span>
+python --version
+<span class="cm"># → Python 3.12.x  (from the venv, not your system Python)</span></pre>
+  </div>
+
+  <div class="callout blue">
+    <div class="callout-title">IDE: Point it to the .venv</div>
+    In Cursor or VS Code: press <strong>Cmd/Ctrl + Shift + P</strong> → "Python: Select Interpreter" → choose the interpreter inside <code>.venv/</code>. This gives you correct autocomplete and type checking for all installed packages.
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ════════════════════════════════════════════════════
+     05 — Install LangChain
+     ════════════════════════════════════════════════════ -->
+<div class="section" id="s5">
+  <div class="section-header cyan">
+    <div class="section-num">05</div>
+    <div class="section-header-text">
+      <h2>Install LangChain &amp; Dependencies</h2>
+      <p>LangChain 1.3+, LangGraph, langchain-openai — the core stack for this course.</p>
+    </div>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header">
+      <span class="code-lang">bash</span>
+      <span class="code-label">Inside the agentic-ai-course directory</span>
+      <button class="copy-btn">Copy</button>
+    </div>
+    <pre><span class="cm"># Core dependencies</span>
+poetry add langchain langchain-openai langgraph python-dotenv
+
+<span class="cm"># Dev dependencies (testing + notebooks)</span>
+poetry add --group dev pytest ipykernel jupyter</pre>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Package</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td><strong>langchain</strong></td><td>Core agent framework — tools, chains, memory, prompt templates</td></tr>
+        <tr><td><strong>langchain-openai</strong></td><td>OpenAI model integration (GPT-4o, GPT-4o-mini) for LangChain</td></tr>
+        <tr><td><strong>langgraph</strong></td><td>Stateful, graph-based agent execution with loops and checkpointing</td></tr>
+        <tr><td><strong>python-dotenv</strong></td><td>Loads API keys from a <code>.env</code> file — keeps secrets out of code</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header">
+      <span class="code-lang">bash</span>
+      <span class="code-label">Verify installation</span>
+      <button class="copy-btn">Copy</button>
+    </div>
+    <pre>poetry run python -c <span class="str">"import langchain; print('LangChain:', langchain.__version__)"</span>
+poetry run python -c <span class="str">"import langgraph; print('LangGraph:', langgraph.__version__)"</span>
+poetry run python -c <span class="str">"import langchain_openai; print('langchain-openai: OK')"</span></pre>
+  </div>
+
+  <div class="output-block">
+    LangChain: 1.3.x<br>
+    LangGraph: 1.0.x<br>
+    langchain-openai: OK
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ════════════════════════════════════════════════════
+     06 — OpenAI API Key
+     ════════════════════════════════════════════════════ -->
+<div class="section" id="s6">
+  <div class="section-header red">
+    <div class="section-num">06</div>
+    <div class="section-header-text">
+      <h2>Set Up Your OpenAI API Key</h2>
+      <p>We use GPT-4o as the model throughout this course. Never hardcode API keys.</p>
+    </div>
+  </div>
+
+  <h3 class="sub">Get Your OpenAI API Key</h3>
+  <ol class="steps-list">
+    <li>Go to <strong>platform.openai.com</strong></li>
+    <li>Sign up or log in → click your profile → <strong>API Keys</strong></li>
+    <li>Click <strong>Create new secret key</strong></li>
+    <li>Copy the key — it starts with <code>sk-...</code></li>
+    <li>Add billing details if you haven't already (a few dollars is enough to start)</li>
+  </ol>
+
+  <h3 class="sub">Create a .env File</h3>
+  <p>Create a <code>.env</code> file in the root of your <code>agentic-ai-course</code> project folder:</p>
+
+  <div class="code-block">
+    <div class="code-header">
+      <span class="code-lang">bash</span>
+      <span class="code-label">Create .env (macOS / Linux)</span>
+      <button class="copy-btn">Copy</button>
+    </div>
+    <pre>touch .env</pre>
+  </div>
+
+  <p>On Windows, create the file manually inside your IDE. Then add your key:</p>
+
+  <div class="code-block">
+    <div class="code-header">
+      <span class="code-lang">env</span>
+      <span class="code-label">.env — paste your key here</span>
+      <button class="copy-btn">Copy</button>
+    </div>
+    <pre><span class="cm"># OpenAI API Key — used throughout the course</span>
+<span class="var">OPENAI_API_KEY</span>=sk-your-key-here</pre>
+  </div>
+
+  <div class="callout red">
+    <div class="callout-title">Security — Add .env to .gitignore Right Now</div>
+    Before doing anything else, run this command to make sure your key is never accidentally committed to git:
+    <br><br>
+    <code>echo ".env" &gt;&gt; .gitignore</code>
+    <br><br>
+    If you accidentally push an API key to GitHub, rotate it immediately at platform.openai.com → API Keys.
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ════════════════════════════════════════════════════
+     07 — Git & GitHub
+     ════════════════════════════════════════════════════ -->
+<div class="section" id="s7">
+  <div class="section-header" style="border-left-color:var(--text-muted)">
+    <div class="section-num">07</div>
+    <div class="section-header-text">
+      <h2>Set Up Git &amp; GitHub</h2>
+      <p>Version control for all your course work. Push to GitHub so your work is backed up.</p>
+    </div>
+  </div>
+
+  <h3 class="sub">Step 1 — Install Git</h3>
+
+  <div class="os-tabs" id="git-tabs">
+    <div class="os-tab active">macOS</div>
+    <div class="os-tab">Windows</div>
+    <div class="os-tab">Linux</div>
+  </div>
+
+  <div id="git-mac" class="os-panel active">
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">Copy</button></div>
+      <pre>brew install git
+git --version   <span class="cm"># → git version 2.x.x</span></pre>
+    </div>
+  </div>
+  <div id="git-win" class="os-panel">
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">powershell</span><button class="copy-btn">Copy</button></div>
+      <pre><span class="cm"># Download and install from: https://git-scm.com/download/win</span>
+<span class="cm"># OR via winget:</span>
+winget install Git.Git
+<span class="cm"># Open a new terminal, then verify:</span>
+git --version</pre>
+    </div>
+  </div>
+  <div id="git-linux" class="os-panel">
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">Copy</button></div>
+      <pre>sudo apt install git -y
+git --version</pre>
+    </div>
+  </div>
+
+  <h3 class="sub">Step 2 — Configure Git Identity</h3>
+  <div class="code-block">
+    <div class="code-header">
+      <span class="code-lang">bash</span>
+      <span class="code-label">One-time global config</span>
+      <button class="copy-btn">Copy</button>
+    </div>
+    <pre>git config --global user.name <span class="str">"Your Name"</span>
+git config --global user.email <span class="str">"you@example.com"</span>
+git config --global init.defaultBranch main</pre>
+  </div>
+
+  <h3 class="sub">Step 3 — Initialise the Repo &amp; Create .gitignore</h3>
+  <div class="code-block">
+    <div class="code-header">
+      <span class="code-lang">bash</span>
+      <span class="code-label">Inside agentic-ai-course/</span>
+      <button class="copy-btn">Copy</button>
+    </div>
+    <pre><span class="cm"># Initialise git</span>
+git init
+
+<span class="cm"># Create .gitignore</span>
+cat &gt; .gitignore &lt;&lt;EOF
+.env
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+*.egg-info/
+.DS_Store
+.ipynb_checkpoints/
+EOF
+
+<span class="cm"># First commit</span>
+git add .
+git commit -m <span class="str">"Initial project setup"</span></pre>
+  </div>
+
+  <h3 class="sub">Step 4 — Push to GitHub</h3>
+  <ol class="steps-list">
+    <li>Go to <strong>github.com</strong> → sign in → click <strong>New repository</strong></li>
+    <li>Name it <code>agentic-ai-course</code>, set it to <strong>Private</strong>, do NOT initialise with a README</li>
+    <li>Click <strong>Create repository</strong></li>
+    <li>Copy the two commands GitHub shows you (they look like the block below)</li>
+  </ol>
+
+  <div class="code-block">
+    <div class="code-header">
+      <span class="code-lang">bash</span>
+      <span class="code-label">Connect and push to GitHub</span>
+      <button class="copy-btn">Copy</button>
+    </div>
+    <pre><span class="cm"># Replace YOUR_USERNAME with your actual GitHub username</span>
+git remote add origin https://github.com/YOUR_USERNAME/agentic-ai-course.git
+git push -u origin main</pre>
+  </div>
+
+  <div class="callout blue">
+    <div class="callout-title">GitHub Authentication</div>
+    If GitHub asks for a password, use a <strong>Personal Access Token</strong> (not your account password). Generate one at: GitHub → Settings → Developer Settings → Personal Access Tokens → Tokens (classic) → Generate new token. Select the <code>repo</code> scope.
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ════════════════════════════════════════════════════
+     08 — Verify: Run the Demo
+     ════════════════════════════════════════════════════ -->
+<div class="section" id="s8">
+  <div class="section-header">
+    <div class="section-num">08</div>
+    <div class="section-header-text">
+      <h2>Verify — Run the Demo Agent</h2>
+      <p>If this script runs and prints a response, your entire environment is working.</p>
+    </div>
+  </div>
+
+  <p>Create the file <code>agentic_ai_course/verify_setup.py</code> and paste the code below. Running this script is your final confirmation that Python, Poetry, LangChain, and your OpenAI key are all wired up correctly.</p>
+
+  <div class="code-block">
+    <div class="code-header">
+      <span class="code-lang">python</span>
+      <span class="code-label">agentic_ai_course/verify_setup.py</span>
+      <button class="copy-btn">Copy</button>
+    </div>
+    <pre><span class="imp">from</span> dotenv <span class="imp">import</span> load_dotenv
+<span class="imp">from</span> langchain.agents <span class="imp">import</span> create_agent
+<span class="imp">from</span> langchain.tools <span class="imp">import</span> tool
+
+<span class="cm"># Load OPENAI_API_KEY from .env</span>
+load_dotenv()
+
+<span class="cm"># ── Define a simple tool ──────────────────────────────────────────────────────</span>
+<span class="cm"># Tools are plain Python functions. The docstring is what the LLM reads —</span>
+<span class="cm"># so write it clearly. The @tool decorator registers it with LangChain.</span>
+
+<span class="dec">@tool</span>
+<span class="kw">def</span> <span class="fn">add_numbers</span>(a: <span class="cls">float</span>, b: <span class="cls">float</span>) -&gt; <span class="cls">str</span>:
+    <span class="str">"""Add two numbers together and return the result."""</span>
+    <span class="kw">return</span> <span class="str">f"The sum of {a} and {b} is {a + b}"</span>
+
+
+<span class="dec">@tool</span>
+<span class="kw">def</span> <span class="fn">greet_user</span>(name: <span class="cls">str</span>) -&gt; <span class="cls">str</span>:
+    <span class="str">"""Greet a user by their name."""</span>
+    <span class="kw">return</span> <span class="str">f"Hello, {name}! Welcome to the Agentic AI System Design course."</span>
+
+
+<span class="cm"># ── Create the agent ──────────────────────────────────────────────────────────</span>
+<span class="var">agent</span> = create_agent(
+    model=<span class="str">"openai:gpt-4o-mini"</span>,       <span class="cm"># using the fast, cheap model for verification</span>
+    tools=[add_numbers, greet_user],
+    system_prompt=<span class="str">"You are a helpful assistant. Use the tools available to you."</span>,
+)
+
+<span class="cm"># ── Run a test query ──────────────────────────────────────────────────────────</span>
+<span class="var">result</span> = agent.invoke({
+    <span class="str">"messages"</span>: [{
+        <span class="str">"role"</span>: <span class="str">"user"</span>,
+        <span class="str">"content"</span>: <span class="str">"Please greet me — my name is Alex. Also, what is 128 + 256?"</span>
+    }]
+})
+
+<span class="fn">print</span>(<span class="str">"\n✅ Setup verified! Agent response:\n"</span>)
+<span class="fn">print</span>(result[<span class="str">"messages"</span>][-<span class="num">1</span>].content)
+
+<span class="fn">print</span>(<span class="str">"\n--- Message trace (shows the ReAct loop steps) ---"</span>)
+<span class="kw">for</span> msg <span class="kw">in</span> result[<span class="str">"messages"</span>]:
+    <span class="fn">print</span>(<span class="str">f"  [{type(msg).__name__:15s}] {str(msg.content)[:80]}"</span>)</pre>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header">
+      <span class="code-lang">bash</span>
+      <span class="code-label">Run the verification script</span>
+      <button class="copy-btn">Copy</button>
+    </div>
+    <pre>poetry run python agentic_ai_course/verify_setup.py</pre>
+  </div>
+
+  <p>You should see output like this:</p>
+
+  <div class="output-block">
+    <br>
+    ✅ Setup verified! Agent response:<br><br>
+    <span class="hi">Hello, Alex! Welcome to the Agentic AI System Design course.</span><br>
+    <span class="hi">And the answer to 128 + 256 is 384.</span><br><br>
+    --- Message trace (shows the ReAct loop steps) ---<br>
+    <span class="dim">  [HumanMessage    ] Please greet me — my name is Alex. Also, what is 128 + 256?</span><br>
+    <span class="dim">  [AIMessage       ] [tool_call: greet_user(name='Alex'), tool_call: add_numbers(a=128, b=256)]</span><br>
+    <span class="dim">  [ToolMessage     ] Hello, Alex! Welcome to the Agentic AI System Design course.</span><br>
+    <span class="dim">  [ToolMessage     ] The sum of 128 and 256 is 384</span><br>
+    <span class="dim">  [AIMessage       ] Hello, Alex! Welcome to the Agentic AI System Design course...</span>
+  </div>
+
+  <div class="callout green">
+    <div class="callout-title">What You Are Seeing</div>
+    Look at the message trace. The agent received your message, decided it needed both tools, called them, received the results, then wrote the final reply. This is the <strong>ReAct loop</strong> — Reason, Act, Observe, repeat — running live in your terminal. We will spend the entire course understanding, building, and optimising this pattern.
+  </div>
+
+  <h3 class="sub">Final Checklist</h3>
+
+  <div class="check-item">
+    <div class="icon">🐍</div>
+    <div class="text">Python 3.11 or 3.12 installed<small>Run: <code>python3 --version</code> → 3.11.x or 3.12.x</small></div>
+  </div>
+  <div class="check-item">
+    <div class="icon">💻</div>
+    <div class="text">Cursor or VS Code installed and pointing to the <code>.venv</code> interpreter<small>Cmd/Ctrl + Shift + P → "Python: Select Interpreter"</small></div>
+  </div>
+  <div class="check-item">
+    <div class="icon">📦</div>
+    <div class="text">Poetry 2.4+ installed<small><code>poetry --version</code> → Poetry (version 2.4.x)</small></div>
+  </div>
+  <div class="check-item">
+    <div class="icon">📁</div>
+    <div class="text"><code>agentic-ai-course</code> project created, venv active<small><code>poetry env info</code> shows a valid Python path inside <code>.venv/</code></small></div>
+  </div>
+  <div class="check-item">
+    <div class="icon">🔗</div>
+    <div class="text">LangChain, LangGraph, langchain-openai installed<small>Import check passed: all three printed a version or "OK"</small></div>
+  </div>
+  <div class="check-item">
+    <div class="icon">🔑</div>
+    <div class="text">OpenAI API key in <code>.env</code>, <code>.env</code> in <code>.gitignore</code><small>Never committed to git — verified with <code>git status</code></small></div>
+  </div>
+  <div class="check-item">
+    <div class="icon">🐙</div>
+    <div class="text">Git initialised, initial commit made, pushed to GitHub<small><code>git log --oneline</code> shows at least one commit</small></div>
+  </div>
+  <div class="check-item">
+    <div class="icon">✅</div>
+    <div class="text"><code>verify_setup.py</code> runs successfully and prints a response<small>This is the single confirmation that everything is wired together correctly</small></div>
+  </div>
+
+  <div class="callout green" style="margin-top:24px">
+    <div class="callout-title">You Are Ready</div>
+    All 8 items checked? You are fully set up. Bring your laptop on Tuesday — we go straight into code from the very first class.
+  </div>
+
+  <h3 class="sub">Common Errors &amp; Fixes</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Error</th><th>Likely Cause</th><th>Fix</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><code>AuthenticationError</code></td>
+          <td>Wrong or missing API key</td>
+          <td>Check <code>.env</code> has <code>OPENAI_API_KEY=sk-...</code> and <code>load_dotenv()</code> is at the top of the script</td>
+        </tr>
+        <tr>
+          <td><code>ModuleNotFoundError: langchain</code></td>
+          <td>Running with system Python instead of the Poetry venv</td>
+          <td>Always use <code>poetry run python</code> or activate with <code>poetry shell</code> first</td>
+        </tr>
+        <tr>
+          <td><code>poetry: command not found</code></td>
+          <td>Poetry not added to PATH</td>
+          <td>Add <code>~/.local/bin</code> (Linux/macOS) or <code>%APPDATA%\Python\Scripts</code> (Windows) to your PATH, then restart terminal</td>
+        </tr>
+        <tr>
+          <td><code>pydantic ValidationError</code></td>
+          <td>Package version mismatch</td>
+          <td>Run <code>poetry update</code> to sync everything to the latest compatible versions</td>
+        </tr>
+        <tr>
+          <td>Git push asks for password</td>
+          <td>GitHub no longer accepts account passwords</td>
+          <td>Use a Personal Access Token — see Step 4 in Section 07</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</div><!-- /page-wrap -->
+
+<div class="page-footer">
+  <strong>Agentic AI System Design</strong> — Prerequisites &amp; Environment Setup<br>
+  Complete all steps before Tuesday · Educosys
+</div>
+
+
+
+
+</body></html>
