@@ -206,88 +206,203 @@ function getFileIcon(type) {
     return icons[type] || icons.txt;
 }
 
-// ──────────────── RESPONSIVE IFRAME STYLES INJECTION ────────────────
+// ──────────────── RESPONSIVE IFRAME STYLES INJECTION & SCROLLABILITY UNCONSTRAINER ────────────────
 function injectResponsiveStylesIntoIframe() {
     try {
         const doc = contentFrame.contentDocument || contentFrame.contentWindow.document;
         if (!doc) return;
 
-        // Ensure viewport meta tag exists for mobile devices
+        // 1. Force unconstrain documentElement & body so the page can scroll naturally
+        if (doc.documentElement) {
+            doc.documentElement.style.removeProperty('overflow');
+            doc.documentElement.style.setProperty('overflow-y', 'auto', 'important');
+            doc.documentElement.style.setProperty('overflow-x', 'hidden', 'important');
+            doc.documentElement.style.setProperty('height', 'auto', 'important');
+            doc.documentElement.style.setProperty('min-height', '100%', 'important');
+        }
+        if (doc.body) {
+            doc.body.style.removeProperty('overflow');
+            doc.body.style.setProperty('overflow-y', 'auto', 'important');
+            doc.body.style.setProperty('overflow-x', 'hidden', 'important');
+            doc.body.style.setProperty('height', 'auto', 'important');
+            doc.body.style.setProperty('min-height', '100vh', 'important');
+        }
+
+        // 2. Unconstrain every ancestor of .react-pdf__Document (removes fixed inset locks, overflow-hidden, and min-h-0 traps)
+        const pdfDoc = doc.querySelector('.react-pdf__Document');
+        if (pdfDoc) {
+            let curr = pdfDoc.parentElement;
+            while (curr && curr !== doc.body) {
+                curr.style.setProperty('position', 'static', 'important');
+                curr.style.setProperty('inset', 'auto', 'important');
+                curr.style.setProperty('height', 'auto', 'important');
+                curr.style.setProperty('max-height', 'none', 'important');
+                curr.style.setProperty('overflow', 'visible', 'important');
+                curr.style.setProperty('flex', 'none', 'important');
+                curr.style.setProperty('touch-action', 'auto', 'important');
+                curr = curr.parentElement;
+            }
+        }
+
+        // 3. Unconstrain any fixed modal containers saved by SingleFile
+        doc.querySelectorAll('[class*="fixed"][class*="inset-0"], .fixed.inset-0, [class*="z-[1000]"], div.fixed').forEach(el => {
+            el.style.setProperty('position', 'static', 'important');
+            el.style.setProperty('inset', 'auto', 'important');
+            el.style.setProperty('height', 'auto', 'important');
+            el.style.setProperty('max-height', 'none', 'important');
+            el.style.setProperty('overflow', 'visible', 'important');
+            el.style.setProperty('background', 'transparent', 'important');
+        });
+
+        // 4. Ensure viewport meta tag exists for mobile devices
         if (!doc.querySelector('meta[name="viewport"]')) {
             const meta = doc.createElement('meta');
             meta.name = 'viewport';
             meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=5.0';
-            doc.head?.appendChild(meta);
+            (doc.head || doc.body).appendChild(meta);
         }
 
-        // Inject responsive overrides into note
+        // 5. Inject comprehensive responsive & scrollability stylesheet into iframe document
         let style = doc.getElementById('responsive-note-overrides');
         if (!style) {
             style = doc.createElement('style');
             style.id = 'responsive-note-overrides';
-            style.textContent = `
-                html, body {
-                    max-width: 100vw !important;
-                    overflow-x: hidden !important;
-                    -webkit-text-size-adjust: 100% !important;
-                    word-wrap: break-word !important;
-                    box-sizing: border-box !important;
-                }
-                *, *::before, *::after {
-                    box-sizing: border-box !important;
-                }
-                img, svg, canvas, video {
-                    max-width: 100% !important;
-                    height: auto !important;
-                }
-                pre, code {
-                    max-width: 100% !important;
-                    white-space: pre-wrap !important;
-                    word-break: break-word !important;
-                    overflow-x: auto !important;
-                }
-                table {
-                    display: block !important;
-                    max-width: 100% !important;
-                    overflow-x: auto !important;
-                    -webkit-overflow-scrolling: touch !important;
-                }
-                .container, .page-wrap, .hero-inner, main, .main, [class*="container"] {
-                    max-width: 100% !important;
-                    padding-left: 16px !important;
-                    padding-right: 16px !important;
-                }
-                .react-pdf__Document, .react-pdf__Page {
-                    max-width: 100% !important;
-                    width: 100% !important;
-                }
-                .react-pdf__Page canvas {
-                    width: 100% !important;
-                    height: auto !important;
-                }
-                @media (max-width: 600px) {
-                    body {
-                        padding-left: 12px !important;
-                        padding-right: 12px !important;
-                        padding-top: 16px !important;
-                    }
-                    h1 {
-                        font-size: 1.6rem !important;
-                        line-height: 1.25 !important;
-                    }
-                    h2 {
-                        font-size: 1.3rem !important;
-                    }
-                    .hero {
-                        padding: 24px 0 !important;
-                    }
-                    .card-body, .card-header {
-                        padding: 16px !important;
-                    }
-                }
-            `;
-            doc.head?.appendChild(style);
+            (doc.body || doc.head).appendChild(style);
         }
+        style.textContent = `
+            html, body {
+                max-width: 100vw !important;
+                height: auto !important;
+                min-height: 100vh !important;
+                overflow-x: hidden !important;
+                overflow-y: auto !important;
+                -webkit-overflow-scrolling: touch !important;
+                -webkit-text-size-adjust: 100% !important;
+                word-wrap: break-word !important;
+                box-sizing: border-box !important;
+            }
+            body {
+                overflow: visible !important;
+                overflow-y: auto !important;
+            }
+            *, *::before, *::after {
+                box-sizing: border-box !important;
+            }
+            div[class*="fixed"][class*="inset-0"],
+            .fixed.inset-0,
+            div[class*="z-[1000]"],
+            div.fixed {
+                position: static !important;
+                inset: auto !important;
+                width: 100% !important;
+                height: auto !important;
+                min-height: auto !important;
+                max-height: none !important;
+                overflow: visible !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                background: transparent !important;
+            }
+            header, aside, .page-orb1, .page-orb2, [aria-label="Toggle Menu"],
+            div[class*="@4xl:w-96"], [data-slot="accordion"],
+            div[class*="justify-end"]:has(button),
+            button:has(svg):has(path[d*="m14 10 7-7"]) {
+                display: none !important;
+            }
+            main, .main, .page, .page-inner,
+            [class*="h-screen"], [class*="overflow-hidden"], [class*="min-h-0"],
+            [class*="h-full"], [class*="h-[calc(100vh-85px)]"],
+            div[class*="overflow-auto"],
+            div[class*="overflow-hidden"],
+            div[class*="flex-col"] {
+                height: auto !important;
+                max-height: none !important;
+                overflow: visible !important;
+                position: static !important;
+                flex: none !important;
+                touch-action: auto !important;
+                user-select: auto !important;
+                -webkit-user-select: auto !important;
+            }
+            .react-pdf__Document {
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                gap: 28px !important;
+                padding: 24px 12px 80px 12px !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 auto !important;
+                height: auto !important;
+                min-height: auto !important;
+                overflow: visible !important;
+            }
+            .react-pdf__Page {
+                width: 100% !important;
+                max-width: 900px !important;
+                height: auto !important;
+                min-height: auto !important;
+                margin: 0 auto !important;
+                box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6) !important;
+                border-radius: 10px !important;
+                border: 1px solid rgba(255, 255, 255, 0.08) !important;
+                background: #ffffff !important;
+            }
+            .react-pdf__Page canvas, .react-pdf__Page__canvas {
+                width: 100% !important;
+                max-width: 100% !important;
+                height: auto !important;
+                display: block !important;
+            }
+            img, svg, canvas, video {
+                max-width: 100% !important;
+                height: auto !important;
+            }
+            pre, code {
+                max-width: 100% !important;
+                white-space: pre-wrap !important;
+                word-break: break-word !important;
+                overflow-x: auto !important;
+            }
+            table {
+                display: block !important;
+                max-width: 100% !important;
+                overflow-x: auto !important;
+                -webkit-overflow-scrolling: touch !important;
+            }
+            .container, .page-wrap, .hero-inner {
+                max-width: 100% !important;
+                padding-left: 16px !important;
+                padding-right: 16px !important;
+            }
+            @media (max-width: 600px) {
+                .react-pdf__Document {
+                    padding: 12px 6px 60px 6px !important;
+                    gap: 16px !important;
+                }
+                .react-pdf__Page {
+                    border-radius: 6px !important;
+                }
+                body {
+                    padding-left: 12px !important;
+                    padding-right: 12px !important;
+                    padding-top: 16px !important;
+                }
+                h1 {
+                    font-size: 1.6rem !important;
+                    line-height: 1.25 !important;
+                }
+                h2 {
+                    font-size: 1.3rem !important;
+                }
+                .hero {
+                    padding: 24px 0 !important;
+                }
+                .card-body, .card-header {
+                    padding: 16px !important;
+                }
+            }
+        `;
     } catch (e) {
         // Cross-origin fallback
     }
@@ -443,6 +558,9 @@ function loadNote(index) {
     const onFrameLoad = () => {
         hideLoading();
         injectResponsiveStylesIntoIframe();
+        setTimeout(injectResponsiveStylesIntoIframe, 100);
+        setTimeout(injectResponsiveStylesIntoIframe, 300);
+        setTimeout(injectResponsiveStylesIntoIframe, 800);
     };
 
     // Load content
