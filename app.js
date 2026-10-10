@@ -134,28 +134,46 @@ NOTES_DATA.forEach(day => {
 
 // ──────────────── DOM REFS ────────────────
 const sidebar = document.getElementById('sidebar');
+const sidebarLogo = document.getElementById('sidebarLogo');
 const sidebarToggle = document.getElementById('sidebarToggle');
 const sidebarOverlay = document.getElementById('sidebarOverlay');
 const menuBtn = document.getElementById('menuBtn');
+const homeBtn = document.getElementById('homeBtn');
 const navList = document.getElementById('navList');
 const searchInput = document.getElementById('searchInput');
+const searchClearBtn = document.getElementById('searchClearBtn');
+
 const welcomeScreen = document.getElementById('welcomeScreen');
+const welcomeBrowseBtn = document.getElementById('welcomeBrowseBtn');
 const contentViewer = document.getElementById('contentViewer');
 const contentFrame = document.getElementById('contentFrame');
 const loadingSpinner = document.getElementById('loadingSpinner');
+
 const breadcrumbDay = document.getElementById('breadcrumbDay');
 const breadcrumbTitle = document.getElementById('breadcrumbTitle');
+const mobileDayPill = document.getElementById('mobileDayPill');
 const mobileTitle = document.getElementById('mobileTitle');
+const mobileMarkReadBtn = document.getElementById('mobileMarkReadBtn');
+const mobileExternalBtn = document.getElementById('mobileExternalBtn');
+
 const prevBtn = document.getElementById('prevBtn');
 const nextBtn = document.getElementById('nextBtn');
 const markReadBtn = document.getElementById('markReadBtn');
 const openExternalBtn = document.getElementById('openExternalBtn');
 const fullscreenBtn = document.getElementById('fullscreenBtn');
 const downloadBtn = document.getElementById('downloadBtn');
+
+const mobileBottomBar = document.getElementById('mobileBottomBar');
+const mobilePrevBtn = document.getElementById('mobilePrevBtn');
+const mobileNextBtn = document.getElementById('mobileNextBtn');
+const mobileNavDay = document.getElementById('mobileNavDay');
+const mobileNavPos = document.getElementById('mobileNavPos');
+
 const pdfNoticeBar = document.getElementById('pdfNoticeBar');
 const pdfNoticeText = document.getElementById('pdfNoticeText');
 const pdfDownloadLink = document.getElementById('pdfDownloadLink');
 const pdfOpenNewTabLink = document.getElementById('pdfOpenNewTabLink');
+
 const progressFill = document.getElementById('progressFill');
 const progressPercent = document.getElementById('progressPercent');
 const totalNotesEl = document.getElementById('totalNotes');
@@ -188,20 +206,107 @@ function getFileIcon(type) {
     return icons[type] || icons.txt;
 }
 
+// ──────────────── RESPONSIVE IFRAME STYLES INJECTION ────────────────
+function injectResponsiveStylesIntoIframe() {
+    try {
+        const doc = contentFrame.contentDocument || contentFrame.contentWindow.document;
+        if (!doc) return;
+
+        // Ensure viewport meta tag exists for mobile devices
+        if (!doc.querySelector('meta[name="viewport"]')) {
+            const meta = doc.createElement('meta');
+            meta.name = 'viewport';
+            meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=5.0';
+            doc.head?.appendChild(meta);
+        }
+
+        // Inject responsive overrides into note
+        let style = doc.getElementById('responsive-note-overrides');
+        if (!style) {
+            style = doc.createElement('style');
+            style.id = 'responsive-note-overrides';
+            style.textContent = `
+                html, body {
+                    max-width: 100vw !important;
+                    overflow-x: hidden !important;
+                    -webkit-text-size-adjust: 100% !important;
+                    word-wrap: break-word !important;
+                    box-sizing: border-box !important;
+                }
+                *, *::before, *::after {
+                    box-sizing: border-box !important;
+                }
+                img, svg, canvas, video {
+                    max-width: 100% !important;
+                    height: auto !important;
+                }
+                pre, code {
+                    max-width: 100% !important;
+                    white-space: pre-wrap !important;
+                    word-break: break-word !important;
+                    overflow-x: auto !important;
+                }
+                table {
+                    display: block !important;
+                    max-width: 100% !important;
+                    overflow-x: auto !important;
+                    -webkit-overflow-scrolling: touch !important;
+                }
+                .container, .page-wrap, .hero-inner, main, .main, [class*="container"] {
+                    max-width: 100% !important;
+                    padding-left: 16px !important;
+                    padding-right: 16px !important;
+                }
+                .react-pdf__Document, .react-pdf__Page {
+                    max-width: 100% !important;
+                    width: 100% !important;
+                }
+                .react-pdf__Page canvas {
+                    width: 100% !important;
+                    height: auto !important;
+                }
+                @media (max-width: 600px) {
+                    body {
+                        padding-left: 12px !important;
+                        padding-right: 12px !important;
+                        padding-top: 16px !important;
+                    }
+                    h1 {
+                        font-size: 1.6rem !important;
+                        line-height: 1.25 !important;
+                    }
+                    h2 {
+                        font-size: 1.3rem !important;
+                    }
+                    .hero {
+                        padding: 24px 0 !important;
+                    }
+                    .card-body, .card-header {
+                        padding: 16px !important;
+                    }
+                }
+            `;
+            doc.head?.appendChild(style);
+        }
+    } catch (e) {
+        // Cross-origin fallback
+    }
+}
+
 // ──────────────── RENDER SIDEBAR NAV ────────────────
 function renderNav(filter = '') {
     navList.innerHTML = '';
-    const lowerFilter = filter.toLowerCase();
+    const lowerFilter = filter.toLowerCase().trim();
 
-    NOTES_DATA.forEach((dayData, dayIdx) => {
+    NOTES_DATA.forEach((dayData) => {
         const matchingNotes = dayData.notes.filter(n =>
             n.name.toLowerCase().includes(lowerFilter) ||
             dayData.title.toLowerCase().includes(lowerFilter) ||
             `day ${dayData.day}`.includes(lowerFilter)
         );
 
-        if (filter && matchingNotes.length === 0) return;
-        if (dayData.notes.length === 0 && !filter) {
+        if (lowerFilter && matchingNotes.length === 0) return;
+        if (dayData.notes.length === 0 && !lowerFilter) {
             // Show empty days but greyed out
             const group = document.createElement('div');
             group.className = 'nav-day-group';
@@ -218,11 +323,11 @@ function renderNav(filter = '') {
 
         const group = document.createElement('div');
         group.className = 'nav-day-group';
-        if (filter || isCurrentDay(dayData.day)) {
+        if (lowerFilter || isCurrentDay(dayData.day)) {
             group.classList.add('expanded');
         }
 
-        const notesToShow = filter ? matchingNotes : dayData.notes;
+        const notesToShow = lowerFilter ? matchingNotes : dayData.notes;
 
         group.innerHTML = `
             <div class="nav-day-header" data-day="${dayData.day}">
@@ -262,7 +367,7 @@ function renderNav(filter = '') {
 
     document.querySelectorAll('.nav-item[data-index]').forEach(item => {
         item.addEventListener('click', () => {
-            const idx = parseInt(item.dataset.index);
+            const idx = parseInt(item.dataset.index, 10);
             loadNote(idx);
         });
     });
@@ -273,6 +378,24 @@ function isCurrentDay(day) {
     return flatNotes[currentNoteIndex]?.day === day;
 }
 
+// ──────────────── SHOW WELCOME SCREEN ────────────────
+function showWelcomeScreen() {
+    currentNoteIndex = null;
+    welcomeScreen.style.display = 'flex';
+    contentViewer.style.display = 'none';
+    if (pdfNoticeBar) pdfNoticeBar.style.display = 'none';
+    if (mobileBottomBar) mobileBottomBar.style.display = 'none';
+
+    // Reset mobile header to welcome state
+    mobileTitle.textContent = 'Agentic AI Notes';
+    if (homeBtn) homeBtn.style.display = 'none';
+    if (mobileDayPill) mobileDayPill.style.display = 'none';
+    if (mobileMarkReadBtn) mobileMarkReadBtn.style.display = 'none';
+    if (mobileExternalBtn) mobileExternalBtn.style.display = 'none';
+
+    renderNav(searchInput.value);
+}
+
 // ──────────────── LOAD NOTE ────────────────
 function loadNote(index) {
     if (index < 0 || index >= flatNotes.length) return;
@@ -280,27 +403,50 @@ function loadNote(index) {
     currentNoteIndex = index;
     const note = flatNotes[index];
 
-    // Update UI
+    // Update screen visibility
     welcomeScreen.style.display = 'none';
     contentViewer.style.display = 'flex';
 
-    // Show loading with safeguard
+    // Show loading spinner with safety timeout
     showLoading(note.type === 'pdf' ? 250 : 1200);
 
-    // Breadcrumb
+    // Update Desktop Breadcrumb
     breadcrumbDay.textContent = `Day ${note.day}`;
     breadcrumbTitle.textContent = note.name;
-    mobileTitle.textContent = note.name;
 
-    // Update mark read button
+    // Update Mobile Header
+    mobileTitle.textContent = note.name;
+    if (homeBtn) homeBtn.style.display = 'flex';
+    if (mobileDayPill) {
+        mobileDayPill.textContent = `Day ${note.day}`;
+        mobileDayPill.style.display = 'inline-block';
+    }
+    if (mobileMarkReadBtn) mobileMarkReadBtn.style.display = 'flex';
+    if (mobileExternalBtn) mobileExternalBtn.style.display = 'flex';
+
+    // Update Mobile Bottom Bar
+    if (mobileBottomBar) {
+        mobileBottomBar.style.display = 'flex';
+        if (mobileNavDay) mobileNavDay.textContent = `Day ${note.day}`;
+        if (mobileNavPos) mobileNavPos.textContent = `Note ${index + 1} of ${flatNotes.length}`;
+        if (mobilePrevBtn) mobilePrevBtn.disabled = index <= 0;
+        if (mobileNextBtn) mobileNextBtn.disabled = index >= flatNotes.length - 1;
+    }
+
+    // Update Mark Read Buttons
     updateMarkReadBtn();
 
     // Reset PDF notice bar
     if (pdfNoticeBar) pdfNoticeBar.style.display = 'none';
 
+    // Handler when iframe content loads
+    const onFrameLoad = () => {
+        hideLoading();
+        injectResponsiveStylesIntoIframe();
+    };
+
     // Load content
     if (note.type === 'pdf') {
-        // PDF Document: Show notice bar and embed with PDF parameters
         if (pdfNoticeBar) {
             pdfNoticeBar.style.display = 'flex';
             if (pdfNoticeText) pdfNoticeText.textContent = `${note.name} (Day ${note.day})`;
@@ -312,13 +458,10 @@ function loadNote(index) {
                 pdfOpenNewTabLink.href = note.file;
             }
         }
-        // Chromium's built-in PDF viewer plugin does not fire standard iframe onload events.
-        // We ensure the loading spinner is dismissed quickly so the PDF is immediately visible.
         setTimeout(hideLoading, 250);
-        contentFrame.onload = hideLoading;
+        contentFrame.onload = onFrameLoad;
         contentFrame.src = `${note.file}#toolbar=1&navpanes=0`;
     } else if (note.type === 'txt') {
-        // For text files, fetch and display in a styled wrapper
         fetch(note.file)
             .then(res => res.text())
             .then(text => {
@@ -329,26 +472,31 @@ function loadNote(index) {
                     <html>
                     <head>
                         <meta charset="utf-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
                         <style>
                             body {
                                 font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
                                 background: #0f0f17;
                                 color: #e0e0e8;
-                                padding: 40px;
-                                line-height: 1.8;
+                                padding: 24px 16px;
+                                line-height: 1.7;
                                 font-size: 15px;
                                 max-width: 800px;
                                 margin: 0 auto;
+                                box-sizing: border-box;
                             }
                             pre {
                                 white-space: pre-wrap;
                                 word-wrap: break-word;
                                 font-family: 'JetBrains Mono', monospace;
-                                background: #18181f;
-                                padding: 24px;
+                                background: #181822;
+                                padding: 18px 14px;
                                 border-radius: 12px;
                                 border: 1px solid rgba(255,255,255,0.08);
                                 color: #c7d2fe;
+                                font-size: 13.5px;
+                                max-width: 100%;
+                                overflow-x: auto;
                             }
                         </style>
                     </head>
@@ -362,7 +510,6 @@ function loadNote(index) {
                 showError(note);
             });
     } else if (note.type === 'docx') {
-        // For docx, show a message with download link
         const doc = contentFrame.contentDocument || contentFrame.contentWindow.document;
         doc.open();
         doc.write(`
@@ -370,6 +517,7 @@ function loadNote(index) {
             <html>
             <head>
                 <meta charset="utf-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <style>
                     body {
                         font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -380,56 +528,55 @@ function loadNote(index) {
                         justify-content: center;
                         min-height: 100vh;
                         margin: 0;
+                        padding: 20px;
+                        box-sizing: border-box;
                     }
                     .container {
                         text-align: center;
-                        padding: 40px;
+                        max-width: 480px;
                     }
                     .icon {
-                        width: 64px;
-                        height: 64px;
+                        width: 60px;
+                        height: 60px;
                         background: rgba(59, 130, 246, 0.15);
                         border-radius: 16px;
                         display: flex;
                         align-items: center;
                         justify-content: center;
-                        margin: 0 auto 20px;
-                        font-size: 28px;
+                        margin: 0 auto 18px;
+                        font-size: 26px;
                     }
                     h2 {
-                        font-size: 1.3rem;
+                        font-size: 1.25rem;
                         margin-bottom: 8px;
                         color: #a5b4fc;
                     }
                     p {
                         color: #9495a8;
-                        margin-bottom: 20px;
+                        margin-bottom: 24px;
                         font-size: 0.9rem;
+                        line-height: 1.6;
                     }
                     a {
                         display: inline-flex;
                         align-items: center;
                         gap: 8px;
-                        padding: 12px 24px;
+                        padding: 13px 26px;
                         background: linear-gradient(135deg, #6366f1, #8b5cf6);
                         color: white;
                         text-decoration: none;
-                        border-radius: 10px;
+                        border-radius: 12px;
                         font-weight: 600;
-                        font-size: 0.9rem;
-                        transition: transform 0.2s, box-shadow 0.2s;
-                    }
-                    a:hover {
-                        transform: translateY(-2px);
-                        box-shadow: 0 8px 24px rgba(99, 102, 241, 0.35);
+                        font-size: 0.92rem;
+                        box-shadow: 0 4px 18px rgba(99, 102, 241, 0.35);
                     }
                 </style>
             </head>
             <body>
                 <div class="container">
                     <div class="icon">📄</div>
-                    <h2>${note.name}</h2>
-                    <p>This is a Word document (.docx). Click below to download and open it in Microsoft Word or Google Docs.</p>
+                    <h2>${escapeHtml(note.name)}</h2>
+                    <p>This is a Word document (.docx). Download to open it in Microsoft Word or Google Docs.</p>
                     <a href="${note.file}" download>⬇ Download Document</a>
                 </div>
             </body>
@@ -438,29 +585,29 @@ function loadNote(index) {
         doc.close();
         hideLoading();
     } else {
-        // HTML, MHTML — load directly in iframe with safety timer
-        contentFrame.onload = hideLoading;
+        // HTML, MHTML — load directly with safety timer and responsive injection
+        contentFrame.onload = onFrameLoad;
         contentFrame.src = note.file;
     }
 
-    // Update nav highlight
+    // Update active highlight in navigation
     renderNav(searchInput.value);
 
-    // Expand the current day group
+    // Expand current day group
     setTimeout(() => {
         const dayGroups = document.querySelectorAll('.nav-day-group');
         dayGroups.forEach(g => {
             const header = g.querySelector('.nav-day-header');
-            if (header && parseInt(header.dataset.day) === note.day) {
+            if (header && parseInt(header.dataset.day, 10) === note.day) {
                 g.classList.add('expanded');
             }
         });
     }, 50);
 
-    // Close mobile sidebar
+    // Close mobile drawer on note selection
     closeSidebar();
 
-    // Update prev/next buttons
+    // Update nav buttons
     updateNavButtons();
 }
 
@@ -471,6 +618,8 @@ function showError(note) {
         <!DOCTYPE html>
         <html>
         <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <style>
                 body {
                     font-family: 'Inter', sans-serif;
@@ -481,16 +630,18 @@ function showError(note) {
                     justify-content: center;
                     min-height: 100vh;
                     margin: 0;
+                    padding: 24px;
                     text-align: center;
+                    box-sizing: border-box;
                 }
-                h2 { color: #f87171; margin-bottom: 8px; }
-                p { color: #9495a8; }
+                h2 { color: #f87171; margin-bottom: 8px; font-size: 1.25rem; }
+                p { color: #9495a8; font-size: 0.9rem; }
             </style>
         </head>
         <body>
             <div>
                 <h2>Unable to load</h2>
-                <p>Could not load "${note.name}". The file may not be accessible.</p>
+                <p>Could not load "${escapeHtml(note.name)}". The file may not be accessible.</p>
             </div>
         </body>
         </html>
@@ -507,30 +658,58 @@ function escapeHtml(text) {
 
 // ──────────────── NAV BUTTONS ────────────────
 function updateNavButtons() {
-    prevBtn.disabled = currentNoteIndex <= 0;
-    nextBtn.disabled = currentNoteIndex >= flatNotes.length - 1;
-    prevBtn.style.opacity = prevBtn.disabled ? '0.3' : '1';
-    nextBtn.style.opacity = nextBtn.disabled ? '0.3' : '1';
+    const isFirst = currentNoteIndex <= 0;
+    const isLast = currentNoteIndex >= flatNotes.length - 1;
+
+    if (prevBtn) {
+        prevBtn.disabled = isFirst;
+        prevBtn.style.opacity = isFirst ? '0.35' : '1';
+    }
+    if (nextBtn) {
+        nextBtn.disabled = isLast;
+        nextBtn.style.opacity = isLast ? '0.35' : '1';
+    }
+
+    if (mobilePrevBtn) mobilePrevBtn.disabled = isFirst;
+    if (mobileNextBtn) mobileNextBtn.disabled = isLast;
 }
 
-prevBtn.addEventListener('click', () => {
-    if (currentNoteIndex > 0) loadNote(currentNoteIndex - 1);
-});
+function navigatePrev() {
+    if (currentNoteIndex > 0) {
+        loadNote(currentNoteIndex - 1);
+    }
+}
 
-nextBtn.addEventListener('click', () => {
-    if (currentNoteIndex < flatNotes.length - 1) loadNote(currentNoteIndex + 1);
-});
+function navigateNext() {
+    if (currentNoteIndex < flatNotes.length - 1) {
+        loadNote(currentNoteIndex + 1);
+    }
+}
+
+prevBtn.addEventListener('click', navigatePrev);
+nextBtn.addEventListener('click', navigateNext);
+if (mobilePrevBtn) mobilePrevBtn.addEventListener('click', navigatePrev);
+if (mobileNextBtn) mobileNextBtn.addEventListener('click', navigateNext);
 
 // ──────────────── MARK READ ────────────────
 function updateMarkReadBtn() {
     if (currentNoteIndex === null) return;
     const note = flatNotes[currentNoteIndex];
-    const isRead = readNotes[note.file];
-    markReadBtn.classList.toggle('read-active', !!isRead);
-    markReadBtn.querySelector('.btn-label').textContent = isRead ? 'Read ✓' : 'Mark Read';
+    const isRead = !!readNotes[note.file];
+
+    if (markReadBtn) {
+        markReadBtn.classList.toggle('read-active', isRead);
+        const label = markReadBtn.querySelector('.btn-label');
+        if (label) label.textContent = isRead ? 'Read ✓' : 'Mark Read';
+    }
+
+    if (mobileMarkReadBtn) {
+        mobileMarkReadBtn.classList.toggle('read-active', isRead);
+        mobileMarkReadBtn.setAttribute('title', isRead ? 'Marked as read' : 'Mark as read');
+    }
 }
 
-markReadBtn.addEventListener('click', () => {
+function toggleMarkRead() {
     if (currentNoteIndex === null) return;
     const note = flatNotes[currentNoteIndex];
     if (readNotes[note.file]) {
@@ -542,7 +721,10 @@ markReadBtn.addEventListener('click', () => {
     updateMarkReadBtn();
     updateProgress();
     renderNav(searchInput.value);
-});
+}
+
+markReadBtn.addEventListener('click', toggleMarkRead);
+if (mobileMarkReadBtn) mobileMarkReadBtn.addEventListener('click', toggleMarkRead);
 
 // ──────────────── PROGRESS ────────────────
 function updateProgress() {
@@ -554,10 +736,13 @@ function updateProgress() {
 }
 
 // ──────────────── OPEN EXTERNAL & DOWNLOAD ────────────────
-openExternalBtn.addEventListener('click', () => {
+function openCurrentInNewTab() {
     if (currentNoteIndex === null) return;
     window.open(flatNotes[currentNoteIndex].file, '_blank');
-});
+}
+
+openExternalBtn.addEventListener('click', openCurrentInNewTab);
+if (mobileExternalBtn) mobileExternalBtn.addEventListener('click', openCurrentInNewTab);
 
 if (downloadBtn) {
     downloadBtn.addEventListener('click', () => {
@@ -579,10 +764,23 @@ fullscreenBtn.addEventListener('click', () => {
 
 // ──────────────── SEARCH ────────────────
 searchInput.addEventListener('input', (e) => {
-    renderNav(e.target.value);
+    const val = e.target.value;
+    if (searchClearBtn) {
+        searchClearBtn.style.display = val ? 'flex' : 'none';
+    }
+    renderNav(val);
 });
 
-// ──────────────── SIDEBAR TOGGLE ────────────────
+if (searchClearBtn) {
+    searchClearBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        searchClearBtn.style.display = 'none';
+        searchInput.focus();
+        renderNav();
+    });
+}
+
+// ──────────────── SIDEBAR TOGGLE & MOBILE GESTURES ────────────────
 function openSidebar() {
     sidebar.classList.add('open');
     sidebarOverlay.classList.add('visible');
@@ -599,21 +797,66 @@ menuBtn.addEventListener('click', openSidebar);
 sidebarToggle.addEventListener('click', closeSidebar);
 sidebarOverlay.addEventListener('click', closeSidebar);
 
+// Home button on mobile header returns to welcome screen
+if (homeBtn) {
+    homeBtn.addEventListener('click', showWelcomeScreen);
+}
+
+// Logo in sidebar returns to welcome screen
+if (sidebarLogo) {
+    sidebarLogo.addEventListener('click', () => {
+        showWelcomeScreen();
+        closeSidebar();
+    });
+}
+
+// Quick CTA on mobile welcome screen to open navigation
+if (welcomeBrowseBtn) {
+    welcomeBrowseBtn.addEventListener('click', openSidebar);
+}
+
+// Mobile Touch Swipe Handling
+let touchStartX = 0;
+let touchStartY = 0;
+
+document.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+    touchStartY = e.changedTouches[0].screenY;
+}, { passive: true });
+
+document.addEventListener('touchend', (e) => {
+    const touchEndX = e.changedTouches[0].screenX;
+    const touchEndY = e.changedTouches[0].screenY;
+    const deltaX = touchEndX - touchStartX;
+    const deltaY = touchEndY - touchStartY;
+
+    // Only respond to predominantly horizontal swipes
+    if (Math.abs(deltaX) > Math.abs(deltaY) * 1.5 && Math.abs(deltaX) > 60) {
+        if (deltaX < 0 && sidebar.classList.contains('open')) {
+            // Swipe left closes sidebar
+            closeSidebar();
+        } else if (deltaX > 0 && touchStartX < 35 && !sidebar.classList.contains('open')) {
+            // Swipe right from left edge opens sidebar
+            openSidebar();
+        }
+    }
+}, { passive: true });
+
 // ──────────────── KEYBOARD SHORTCUTS ────────────────
 document.addEventListener('keydown', (e) => {
-    // Arrow keys for navigation
     if (e.key === 'ArrowLeft' && !e.target.matches('input')) {
-        if (currentNoteIndex > 0) loadNote(currentNoteIndex - 1);
+        navigatePrev();
     }
     if (e.key === 'ArrowRight' && !e.target.matches('input')) {
-        if (currentNoteIndex < flatNotes.length - 1) loadNote(currentNoteIndex + 1);
+        navigateNext();
     }
-    // Ctrl+K to focus search
     if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
         e.preventDefault();
+        if (!sidebar.classList.contains('open') && window.innerWidth <= 1024) {
+            openSidebar();
+        }
         searchInput.focus();
     }
-    // Escape to close sidebar
     if (e.key === 'Escape') {
         closeSidebar();
         if (document.body.classList.contains('fullscreen-mode')) {
@@ -624,7 +867,6 @@ document.addEventListener('keydown', (e) => {
 
 // ──────────────── QUICK LINKS ────────────────
 function renderQuickLinks() {
-    // Show the first note of each day that has notes (max 6)
     const links = NOTES_DATA
         .filter(d => d.notes.length > 0)
         .slice(0, 6)
@@ -643,7 +885,7 @@ function renderQuickLinks() {
 
     document.querySelectorAll('.quick-link[data-index]').forEach(link => {
         link.addEventListener('click', () => {
-            loadNote(parseInt(link.dataset.index));
+            loadNote(parseInt(link.dataset.index, 10));
         });
     });
 }
